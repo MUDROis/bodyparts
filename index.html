@@ -367,7 +367,7 @@
     <section class="slide" id="slide-2">
       <h2>🎮 Dialogue Match - English ↔ Spanish</h2>
       <p style="margin-bottom: 1rem;">Match the dialogue phrases! Click an English phrase, then click its Spanish equivalent. Find all pairs!</p>
-      <div class="score-display">Matches: <span id="match-score">0</span>/28</div>
+      <div class="score-display">Matches: <span id="match-score">0</span>/<span id="match-total">28</span></div>
       
       <div class="matching-grid">
         <div class="matching-column" id="english-col">
@@ -599,6 +599,11 @@
     slides[currentSlide].classList.add('active');
     dots[currentSlide].classList.add('active');
     
+    // Re-initialize matching game when entering slide 2
+    if (currentSlide === 2) {
+      initMatching();
+    }
+    
     prevBtn.disabled = currentSlide === 0;
     nextBtn.disabled = currentSlide === slides.length - 1;
     nextBtn.textContent = currentSlide === slides.length - 1 ? 'Finish' : 'Next ➡';
@@ -654,7 +659,10 @@
     enCol.innerHTML = '';
     esCol.innerHTML = '';
     matchesFound = 0;
+    selectedEn = null;
+    selectedEs = null;
     document.getElementById('match-score').textContent = '0';
+    document.getElementById('match-total').textContent = matchData.length;
     document.getElementById('match-feedback').style.display = 'none';
     
     // Use Fisher-Yates shuffle for proper randomization without overlapping positions
@@ -694,17 +702,21 @@
   function handleMatchClick(el) {
     if (el.classList.contains('matched')) return;
     
+    // Clear any existing selections before making a new one
+    const fb = document.getElementById('match-feedback');
+    fb.style.display = 'none';
+    
     if (el.dataset.type === 'en') {
-      if (selectedEn) selectedEn.classList.remove('selected');
+      if (selectedEn && selectedEn !== el) selectedEn.classList.remove('selected');
       selectedEn = el;
     } else {
-      if (selectedEs) selectedEs.classList.remove('selected');
+      if (selectedEs && selectedEs !== el) selectedEs.classList.remove('selected');
       selectedEs = el;
     }
     
     el.classList.add('selected');
     
-    if (selectedEn && selectedEs) {
+    if (selectedEn && selectedEs && selectedEn !== el && selectedEs !== el) {
       setTimeout(checkMatch, 300);
     }
   }
@@ -722,6 +734,10 @@
       document.getElementById('match-score').textContent = matchesFound;
       speak(selectedEn.textContent + '. ' + selectedEs.textContent);
       
+      // Reset selections immediately after successful match
+      selectedEn = null;
+      selectedEs = null;
+      
       if (matchesFound === matchData.length) {
         fb.className = 'feedback success';
         fb.textContent = '🎉 Perfect! All matches found!';
@@ -736,12 +752,13 @@
         selectedEs.classList.remove('wrong', 'selected');
         selectedEn = null;
         selectedEs = null;
+        fb.style.display = 'none';
       }, 500);
     }
   }
 
-  initMatching();
-
+  // initMatching() is called when entering slide 2 via goToSlide()
+  
   // Dialogue Functions
   function playPatientLine() {
     const body = document.getElementById('sel-body-part').value;
