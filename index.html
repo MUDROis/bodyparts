@@ -51,12 +51,12 @@
   .vocab-item span { font-weight: 500; font-size: 1.05rem; }
   .vocab-item small { display: block; color: #666; font-size: 0.85rem; margin-top: 2px; }
   
-  .matching-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin: 1.5rem 0; }
-  .matching-column { display: flex; flex-direction: column; gap: 0.8rem; }
-  .match-item { padding: 1rem; background: var(--light); border: 3px solid transparent; border-radius: var(--radius); cursor: pointer; transition: all 0.3s; text-align: center; font-weight: 600; }
+  .matching-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem; margin: 1.5rem 0; }
+  .matching-column { display: flex; flex-direction: column; gap: 1rem; }
+  .match-item { padding: 1.2rem; background: var(--light); border: 3px solid transparent; border-radius: var(--radius); cursor: pointer; transition: all 0.3s; text-align: center; font-weight: 600; min-height: 60px; display: flex; align-items: center; justify-content: center; word-wrap: break-word; line-height: 1.4; }
   .match-item:hover { background: #dce4e8; transform: translateY(-2px); }
-  .match-item.selected { border-color: var(--primary); background: #d4edda; }
-  .match-item.matched { border-color: var(--success); background: #d4edda; opacity: 0.6; pointer-events: none; }
+  .match-item.selected { border-color: var(--primary); background: #d4edda; box-shadow: 0 4px 8px rgba(42, 157, 143, 0.3); }
+  .match-item.matched { border-color: var(--success); background: #d4edda; opacity: 0.5; pointer-events: none; }
   .match-item.wrong { border-color: var(--error); animation: shake 0.5s; }
   @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
   
@@ -365,9 +365,9 @@
 
     <!-- SLIDE 3: Matching Game -->
     <section class="slide" id="slide-2">
-      <h2>🎮 Matching Game - English ↔ Spanish</h2>
-      <p style="margin-bottom: 1rem;">Click an English word, then click its Spanish match. Find all pairs!</p>
-      <div class="score-display">Matches: <span id="match-score">0</span>/22</div>
+      <h2>🎮 Dialogue Match - English ↔ Spanish</h2>
+      <p style="margin-bottom: 1rem;">Match the dialogue phrases! Click an English phrase, then click its Spanish equivalent. Find all pairs!</p>
+      <div class="score-display">Matches: <span id="match-score">0</span>/28</div>
       
       <div class="matching-grid">
         <div class="matching-column" id="english-col">
@@ -614,33 +614,33 @@
 
   // Matching Game - All words from dialogue
   const matchData = [
-    { en: 'Head', es: 'La cabeza' },
-    { en: 'Stomach', es: 'El estómago' },
-    { en: 'Leg', es: 'La pierna' },
-    { en: 'Foot', es: 'El pie' },
-    { en: 'Hand', es: 'La mano' },
-    { en: 'Throat', es: 'La garganta' },
-    { en: 'Cough', es: 'Tos' },
-    { en: 'Cold (feeling)', es: 'Frío' },
-    { en: 'Hot (feeling)', es: 'Calor' },
-    { en: 'Thank you, doctor', es: 'Gracias, doctor' },
     { en: 'Good morning. I am Dr. García.', es: 'Buenos días. Soy el doctor García.' },
     { en: 'Good morning, doctor.', es: 'Buenos días, doctor.' },
     { en: 'How are you? What hurts?', es: '¿Cómo estás? ¿Qué te duele?' },
+    { en: 'My head hurts', es: 'Me duele la cabeza' },
+    { en: 'My stomach hurts', es: 'Me duele el estómago' },
+    { en: 'My throat hurts', es: 'Me duele la garganta' },
+    { en: 'My leg hurts', es: 'Me duele la pierna' },
+    { en: 'My foot hurts', es: 'Me duele el pie' },
+    { en: 'My hand hurts', es: 'Me duele la mano' },
+    { en: 'I have a cough', es: 'Tengo tos' },
+    { en: 'I am cold', es: 'Tengo frío' },
+    { en: 'I am hot', es: 'Tengo calor' },
     { en: 'Let me see... You have', es: 'Déjame ver... Tienes' },
-    { en: 'Flu', es: 'Gripe' },
-    { en: 'A cold', es: 'Un resfriado' },
-    { en: 'An infection', es: 'Una infección' },
-    { en: 'A virus', es: 'Un virus' },
+    { en: 'flu', es: 'gripe' },
+    { en: 'a cold', es: 'un resfriado' },
+    { en: 'an infection', es: 'una infección' },
+    { en: 'a virus', es: 'un virus' },
     { en: 'You need', es: 'Necesitas' },
-    { en: 'To rest', es: 'Descansar' },
-    { en: 'Take medicine', es: 'Tomar medicina' },
-    { en: 'Drink a lot of water', es: 'Beber mucha agua' },
-    { en: 'Take syrup', es: 'Tomar jarabe' },
-    { en: 'Sleep a lot', es: 'Dormir mucho' },
-    { en: 'Eat fruits', es: 'Comer frutas' },
-    { en: "Don't go to school", es: 'No ir a la escuela' },
-    { en: 'Come back in two days', es: 'Volver en dos días' },
+    { en: 'to rest', es: 'descansar' },
+    { en: 'take medicine', es: 'tomar medicina' },
+    { en: 'drink a lot of water', es: 'beber mucha agua' },
+    { en: 'take syrup', es: 'tomar jarabe' },
+    { en: 'sleep a lot', es: 'dormir mucho' },
+    { en: 'eat fruits', es: 'comer frutas' },
+    { en: "don't go to school", es: 'no ir a la escuela' },
+    { en: 'come back in two days', es: 'volver en dos días' },
+    { en: 'Thank you, doctor', es: 'Gracias, doctor' },
     { en: "You're welcome. Get well soon!", es: 'De nada. ¡Mejórate pronto!' }
   ];
 
@@ -657,8 +657,18 @@
     document.getElementById('match-score').textContent = '0';
     document.getElementById('match-feedback').style.display = 'none';
     
-    const shuffledEn = [...matchData].sort(() => Math.random() - 0.5);
-    const shuffledEs = [...matchData].sort(() => Math.random() - 0.5);
+    // Use Fisher-Yates shuffle for proper randomization without overlapping positions
+    function shuffleArray(array) {
+      const shuffled = [...array];
+      for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+      }
+      return shuffled;
+    }
+    
+    const shuffledEn = shuffleArray(matchData);
+    const shuffledEs = shuffleArray(matchData);
     
     shuffledEn.forEach(item => {
       const div = document.createElement('div');
