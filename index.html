@@ -130,14 +130,6 @@
           
           <div class="vocab-item">
             <div>
-              <span>Buenos días, doctor.</span>
-              <small>Good morning, doctor.</small>
-            </div>
-            <button class="tts-icon" onclick="speak('Buenos días, doctor.', this)">🔊</button>
-          </div>
-          
-          <div class="vocab-item">
-            <div>
               <span>Me duele la cabeza</span>
               <small>My head hurts (I have a headache)</small>
             </div>
@@ -162,6 +154,30 @@
           
           <div class="vocab-item">
             <div>
+              <span>Me duele la pierna</span>
+              <small>My leg hurts</small>
+            </div>
+            <button class="tts-icon" onclick="speak('Me duele la pierna', this)">🔊</button>
+          </div>
+          
+          <div class="vocab-item">
+            <div>
+              <span>Me duele el pie</span>
+              <small>My foot hurts</small>
+            </div>
+            <button class="tts-icon" onclick="speak('Me duele el pie', this)">🔊</button>
+          </div>
+          
+          <div class="vocab-item">
+            <div>
+              <span>Me duele la mano</span>
+              <small>My hand hurts</small>
+            </div>
+            <button class="tts-icon" onclick="speak('Me duele la mano', this)">🔊</button>
+          </div>
+          
+          <div class="vocab-item">
+            <div>
               <span>Tengo tos</span>
               <small>I have a cough</small>
             </div>
@@ -174,6 +190,14 @@
               <small>I am cold</small>
             </div>
             <button class="tts-icon" onclick="speak('Tengo frío', this)">🔊</button>
+          </div>
+          
+          <div class="vocab-item">
+            <div>
+              <span>Tengo calor</span>
+              <small>I am hot</small>
+            </div>
+            <button class="tts-icon" onclick="speak('Tengo calor', this)">🔊</button>
           </div>
           
           <div class="vocab-item">
@@ -194,6 +218,14 @@
               <small>Good morning. I am Dr. García.</small>
             </div>
             <button class="tts-icon" onclick="speak('Buenos días. Soy el doctor García.', this)">🔊</button>
+          </div>
+          
+          <div class="vocab-item">
+            <div>
+              <span>Buenos días, doctor.</span>
+              <small>Good morning, doctor.</small>
+            </div>
+            <button class="tts-icon" onclick="speak('Buenos días, doctor.', this)">🔊</button>
           </div>
           
           <div class="vocab-item">
@@ -230,6 +262,22 @@
           
           <div class="vocab-item">
             <div>
+              <span>una infección</span>
+              <small>an infection</small>
+            </div>
+            <button class="tts-icon" onclick="speak('una infección', this)">🔊</button>
+          </div>
+          
+          <div class="vocab-item">
+            <div>
+              <span>un virus</span>
+              <small>a virus</small>
+            </div>
+            <button class="tts-icon" onclick="speak('un virus', this)">🔊</button>
+          </div>
+          
+          <div class="vocab-item">
+            <div>
               <span>Necesitas</span>
               <small>You need</small>
             </div>
@@ -242,6 +290,62 @@
               <small>to rest</small>
             </div>
             <button class="tts-icon" onclick="speak('descansar', this)">🔊</button>
+          </div>
+          
+          <div class="vocab-item">
+            <div>
+              <span>tomar medicina</span>
+              <small>take medicine</small>
+            </div>
+            <button class="tts-icon" onclick="speak('tomar medicina', this)">🔊</button>
+          </div>
+          
+          <div class="vocab-item">
+            <div>
+              <span>beber mucha agua</span>
+              <small>drink a lot of water</small>
+            </div>
+            <button class="tts-icon" onclick="speak('beber mucha agua', this)">🔊</button>
+          </div>
+          
+          <div class="vocab-item">
+            <div>
+              <span>tomar jarabe</span>
+              <small>take syrup</small>
+            </div>
+            <button class="tts-icon" onclick="speak('tomar jarabe', this)">🔊</button>
+          </div>
+          
+          <div class="vocab-item">
+            <div>
+              <span>dormir mucho</span>
+              <small>sleep a lot</small>
+            </div>
+            <button class="tts-icon" onclick="speak('dormir mucho', this)">🔊</button>
+          </div>
+          
+          <div class="vocab-item">
+            <div>
+              <span>comer frutas</span>
+              <small>eat fruits</small>
+            </div>
+            <button class="tts-icon" onclick="speak('comer frutas', this)">🔊</button>
+          </div>
+          
+          <div class="vocab-item">
+            <div>
+              <span>no ir a la escuela</span>
+              <small>don't go to school</small>
+            </div>
+            <button class="tts-icon" onclick="speak('no ir a la escuela', this)">🔊</button>
+          </div>
+          
+          <div class="vocab-item">
+            <div>
+              <span>volver en dos días</span>
+              <small>come back in two days</small>
+            </div>
+            <button class="tts-icon" onclick="speak('volver en dos días', this)">🔊</button>
           </div>
           
           <div class="vocab-item">
@@ -444,18 +548,28 @@
 
   function playAllVocab() {
     const phrases = [
-      // Patient phrases
-      'Buenos días, doctor.',
+      // Patient phrases - body parts
       'Me duele la cabeza', 'Me duele el estómago', 'Me duele la garganta',
-      'Tengo tos', 'Tengo frío',
+      'Me duele la pierna', 'Me duele el pie', 'Me duele la mano',
+      // Patient phrases - symptoms
+      'Tengo tos', 'Tengo frío', 'Tengo calor',
+      // Patient phrase - farewell
       'Gracias, doctor',
-      // Doctor phrases
-      'Buenos días. Soy el doctor García.',
+      // Doctor phrases - greetings
+      'Buenos días. Soy el doctor García.', 'Buenos días, doctor.',
+      // Doctor phrases - questions
       '¿Cómo estás? ¿Qué te duele?',
+      // Doctor phrases - examination
       'Déjame ver... Tienes',
-      'gripe', 'un resfriado',
+      // Doctor phrases - diagnoses
+      'gripe', 'un resfriado', 'una infección', 'un virus',
+      // Doctor phrases - treatment intro
       'Necesitas',
-      'descansar',
+      // Doctor phrases - treatments
+      'descansar', 'tomar medicina', 'beber mucha agua', 'tomar jarabe',
+      // Doctor phrases - advice
+      'dormir mucho', 'comer frutas', 'no ir a la escuela', 'volver en dos días',
+      // Farewell
       'De nada. ¡Mejórate pronto!'
     ];
     let i = 0;
@@ -503,21 +617,34 @@
   };
   dots.forEach(d => d.onclick = () => goToSlide(parseInt(d.dataset.slide)));
 
-  // Matching Game - Reduced to 15 essential dialogue phrases
+  // Matching Game - All words from dialogue
   const matchData = [
-    { en: 'Good morning, doctor.', es: 'Buenos días, doctor.' },
     { en: 'Good morning. I am Dr. García.', es: 'Buenos días. Soy el doctor García.' },
+    { en: 'Good morning, doctor.', es: 'Buenos días, doctor.' },
     { en: 'How are you? What hurts?', es: '¿Cómo estás? ¿Qué te duele?' },
     { en: 'My head hurts', es: 'Me duele la cabeza' },
     { en: 'My stomach hurts', es: 'Me duele el estómago' },
     { en: 'My throat hurts', es: 'Me duele la garganta' },
+    { en: 'My leg hurts', es: 'Me duele la pierna' },
+    { en: 'My foot hurts', es: 'Me duele el pie' },
+    { en: 'My hand hurts', es: 'Me duele la mano' },
     { en: 'I have a cough', es: 'Tengo tos' },
     { en: 'I am cold', es: 'Tengo frío' },
+    { en: 'I am hot', es: 'Tengo calor' },
     { en: 'Let me see... You have', es: 'Déjame ver... Tienes' },
     { en: 'flu', es: 'gripe' },
     { en: 'a cold', es: 'un resfriado' },
+    { en: 'an infection', es: 'una infección' },
+    { en: 'a virus', es: 'un virus' },
     { en: 'You need', es: 'Necesitas' },
     { en: 'to rest', es: 'descansar' },
+    { en: 'take medicine', es: 'tomar medicina' },
+    { en: 'drink a lot of water', es: 'beber mucha agua' },
+    { en: 'take syrup', es: 'tomar jarabe' },
+    { en: 'sleep a lot', es: 'dormir mucho' },
+    { en: 'eat fruits', es: 'comer frutas' },
+    { en: "don't go to school", es: 'no ir a la escuela' },
+    { en: 'come back in two days', es: 'volver en dos días' },
     { en: 'Thank you, doctor', es: 'Gracias, doctor' },
     { en: "You're welcome. Get well soon!", es: 'De nada. ¡Mejórate pronto!' }
   ];
