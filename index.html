@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🏥 Clínica de Palabras | A1 Spanish Doctor's Clinic</title>
+<style>
+  :root {
+    --primary: #2A9D8F;
+    --secondary: #E9C46A;
+    --accent: #E76F51;
+    --bg: #F4F7F6;
+    --card: #FFFFFF;
+    --text: #264653;
+    --light: #E9ECEF;
+    --success: #2A9D8F;
+    --error: #E76F51;
+    --radius: 12px;
+    --shadow: 0 4px 12px rgba(0,0,0,0.08);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); line-height: 1.5; }
+  .app { max-width: 900px; margin: 2rem auto; padding: 0 1rem; }
+  header { text-align: center; margin-bottom: 1.5rem; }
+  .progress-dots { display: flex; justify-content: center; gap: 8px; margin-bottom: 1rem; }
+  .dot { width: 32px; height: 32px; border-radius: 50%; background: var(--light); display: flex; align-items: center; justify-content: center; font-weight: bold; color: #777; transition: all 0.3s; }
+  .dot.active { background: var(--primary); color: white; transform: scale(1.1); box-shadow: var(--shadow); }
+  .dot.completed { background: var(--secondary); }
+  h1 { font-size: 2rem; margin-bottom: 0.5rem; color: var(--text); }
+  .slide { display: none; background: var(--card); padding: 2rem; border-radius: var(--radius); box-shadow: var(--shadow); min-height: 400px; }
+  .slide.active { display: block; animation: fadeIn 0.4s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  
+  .btn { padding: 0.8rem 1.5rem; border: none; border-radius: var(--radius); font-size: 1rem; cursor: pointer; transition: all 0.2s; font-weight: 600; }
+  .btn-primary { background: var(--primary); color: white; }
+  .btn-primary:hover { background: #21867a; transform: translateY(-2px); }
+  .btn-secondary { background: var(--secondary); color: var(--text); }
+  .btn-secondary:hover { background: #d9b35a; }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+  
+  .tts-icon { cursor: pointer; display: inline-flex; align-items: center; gap: 8px; padding: 6px 10px; border-radius: 8px; background: var(--light); transition: background 0.2s; margin-left: 8px; }
+  .tts-icon:hover { background: #dce4e8; }
+  .tts-icon.speaking { background: var(--secondary); animation: pulse 1s infinite; }
+  @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(233, 196, 106, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(233, 196, 106, 0); } 100% { box-shadow: 0 0 0 0 rgba(233, 196, 106, 0); } }
+  
+  .vocab-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin: 1.5rem 0; }
+  .vocab-card { padding: 1.2rem; border: 2px solid var(--light); border-radius: var(--radius); }
+  .vocab-card h3 { margin-bottom: 1rem; color: var(--primary); text-align: center; font-size: 1.3rem; }
+  .vocab-item { display: flex; justify-content: space-between; align-items: center; padding: 0.8rem; margin-bottom: 0.6rem; background: #f8f9fa; border-radius: 8px; transition: all 0.2s; }
+  .vocab-item:hover { background: var(--light); transform: translateX(5px); }
+  .vocab-item span { font-weight: 500; font-size: 1.05rem; }
+  .vocab-item small { display: block; color: #666; font-size: 0.85rem; margin-top: 2px; }
+  
+  .matching-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin: 1.5rem 0; }
+  .matching-column { display: flex; flex-direction: column; gap: 0.8rem; }
+  .match-item { padding: 1rem; background: var(--light); border: 3px solid transparent; border-radius: var(--radius); cursor: pointer; transition: all 0.3s; text-align: center; font-weight: 600; }
+  .match-item:hover { background: #dce4e8; transform: translateY(-2px); }
+  .match-item.selected { border-color: var(--primary); background: #d4edda; }
+  .match-item.matched { border-color: var(--success); background: #d4edda; opacity: 0.6; pointer-events: none; }
+  .match-item.wrong { border-color: var(--error); animation: shake 0.5s; }
+  @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
+  
+  .dialogue-container { background: #f8f9fa; padding: 2rem; border-radius: var(--radius); margin: 1.5rem 0; border-left: 5px solid var(--primary); }
+  .dialogue-line { margin-bottom: 1.5rem; padding: 1rem; background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+  .dialogue-line strong { color: var(--primary); margin-right: 0.5rem; }
+  select { padding: 8px 12px; font-size: 1rem; border-radius: 8px; border: 2px solid var(--light); background: white; cursor: pointer; margin: 0 4px; }
+  select:focus { border-color: var(--primary); outline: none; }
+  .speaker-label { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.85rem; margin-bottom: 0.5rem; }
+  .speaker-label.patient { background: #ffe5e5; color: #c92a2a; }
+  .speaker-label.doctor { background: #e5f3ff; color: #1864ab; }
+  
+  .feedback { margin-top: 1rem; padding: 1rem; border-radius: 8px; font-weight: bold; display: none; text-align: center; }
+  .feedback.success { background: #d4edda; color: #155724; display: block; }
+  .feedback.error { background: #f8d7da; color: #721c24; display: block; }
+  
+  .certificate { text-align: center; padding: 2rem; border: 3px double var(--secondary); border-radius: var(--radius); background: #fffdf5; display: none; margin-top: 1.5rem; }
+  .certificate h2 { color: var(--accent); margin-bottom: 1rem; }
+  
+  footer { display: flex; justify-content: space-between; margin-top: 1.5rem; }
+  .score-display { font-size: 1.1rem; font-weight: bold; color: var(--primary); margin-bottom: 1rem; text-align: center; }
+  
+  @media (max-width: 700px) {
+    .matching-grid { grid-template-columns: 1fr; }
+    .vocab-grid { grid-template-columns: 1fr; }
+    .app { padding: 0 0.5rem; }
+    .slide { padding: 1.2rem; min-height: auto; }
+    footer { flex-direction: column; gap: 0.8rem; }
+    .btn { width: 100%; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="progress-dots">
+      <div class="dot active" data-slide="0">1</div>
+      <div class="dot" data-slide="1">2</div>
+      <div class="dot" data-slide="2">3</div>
+      <div class="dot" data-slide="3">4</div>
+    </div>
+    <h1>🏥 Clínica de Palabras</h1>
+    <p style="color:#666; font-size:0.9rem;">Spanish A1 | At the Doctor's Office</p>
+  </header>
+
+  <main>
+    <!-- SLIDE 1: Welcome -->
+    <section class="slide active" id="slide-0">
+      <h2>👋 Welcome to the Clinic!</h2>
+      <p style="margin: 1rem 0; font-size: 1.05rem;">
+        Learn to talk about health problems in Spanish! Follow these 4 steps:
+      </p>
+      <ul style="margin-left: 1.5rem; margin-bottom: 1.5rem; color: #444; line-height: 2;">
+        <li><strong>Step 2:</strong> Listen to vocabulary with audio 🔊</li>
+        <li><strong>Step 3:</strong> Match English and Spanish words</li>
+        <li><strong>Step 4:</strong> Practice a complete doctor-patient dialogue</li>
+      </ul>
+      <p style="margin-bottom: 1.5rem; font-size: 0.9rem; color: #777;">💡 Click 🔊 to hear pronunciation. Repeat out loud!</p>
+      <button class="btn btn-primary" id="start-btn">🚀 Start Learning</button>
+    </section>
+
+    <!-- SLIDE 2: Vocabulary with Words & Audio -->
+    <section class="slide" id="slide-1">
+      <h2>📖 Vocabulary - Listen & Learn</h2>
+      <p style="margin-bottom: 1rem;">Click 🔊 to hear each phrase. Read the Spanish and English meanings.</p>
+      
+      <div class="vocab-grid">
+        <div class="vocab-card">
+          <h3>🤒 Patient Phrases</h3>
+          
+          <div class="vocab-item">
+            <div>
+              <span>Me duele la cabeza</span>
+              <small>My head hurts (I have a headache)</small>
+            </div>
+            <button class="tts-icon" onclick="speak('Me duele la cabeza', this)">🔊</button>
+          </div>
+          
+          <div class="vocab-item">
+            <div>
+              <span>Me duele el estómago</span>
+              <small>My stomach hurts</small>
+            </div>
+            <button class="tts-icon" onclick="speak('Me duele el estómago', this)">🔊</button>
+          </div>
+          
+          <div class="vocab-item">
+            <div>
+              <span>Me duele la garganta</span>
+              <small>My throat hurts</small>
+            </div>
+            <button class="tts-icon" onclick="speak('Me duele la garganta', this)">🔊</button>
+          </div>
+          
+          <div class="vocab-item">
+            <div>
+              <span>Tengo fiebre</span>
+              <small>I have a fever</small>
+            </div>
+            <button class="tts-icon" onclick="speak('Tengo fiebre', this)">🔊</button>
+          </div>
+          
+          <div class="vocab-item">
+            <div>
+              <span>Tengo tos</span>
+              <small>I have a cough</small>
+            </div>
+            <button class="tts-icon" onclick="speak('Tengo tos', this)">🔊</button>
+          </div>
+          
+          <div class="vocab-item">
+            <div>
+              <span>Me duele la pierna</span>
+              <small>My leg hurts</small>
+            </div>
+            <button class="tts-icon" onclick="speak('Me duele la pierna', this)">🔊</button>
+          </div>
+        </div>
+        
+        <div class="vocab-card">
+          <h3>👨‍⚕️ Doctor Phrases</h3>
+          
+          <div class="vocab-item">
+            <div>
+              <span>Buenos días</span>
+              <small>Good morning</small>
+            </div>
+            <button class="tts-icon" onclick="speak('Buenos días', this)">🔊</button>
+          </div>
+          
+          <div class="vocab-item">
+            <div>
+              <span>¿Qué te duele?</span>
+              <small>What hurts?</small>
+            </div>
+            <button class="tts-icon" onclick="speak('¿Qué te duele?', this)">🔊</button>
+          </div>
+          
+          <div class="vocab-item">
+            <div>
+              <span>Tienes gripe</span>
+              <small>You have the flu</small>
+            </div>
+            <button class="tts-icon" onclick="speak('Tienes gripe', this)">🔊</button>
+          </div>
+          
+          <div class="vocab-item">
+            <div>
+              <span>Necesitas descansar</span>
+              <small>You need to rest</small>
+            </div>
+            <button class="tts-icon" onclick="speak('Necesitas descansar', this)">🔊</button>
+          </div>
+          
+          <div class="vocab-item">
+            <div>
+              <span>Toma medicina</span>
+              <small>Take medicine</small>
+            </div>
+            <button class="tts-icon" onclick="speak('Toma medicina', this)">🔊</button>
+          </div>
+          
+          <div class="vocab-item">
+            <div>
+              <span>Mejórate pronto</span>
+              <small>Get well soon</small>
+            </div>
+            <button class="tts-icon" onclick="speak('Mejórate pronto', this)">🔊</button>
+          </div>
+        </div>
+      </div>
+      
+      <div style="text-align:center;">
+        <button class="btn btn-secondary" onclick="playAllVocab()">🔊 Play All Vocabulary</button>
+      </div>
+    </section>
+
+    <!-- SLIDE 3: Matching Game -->
+    <section class="slide" id="slide-2">
+      <h2>🎮 Matching Game - English ↔ Spanish</h2>
+      <p style="margin-bottom: 1rem;">Click an English word, then click its Spanish match. Find all pairs!</p>
+      <div class="score-display">Matches: <span id="match-score">0</span>/8</div>
+      
+      <div class="matching-grid">
+        <div class="matching-column" id="english-col">
+          <!-- Generated by JS -->
+        </div>
+        <div class="matching-column" id="spanish-col">
+          <!-- Generated by JS -->
+        </div>
+      </div>
+      
+      <div id="match-feedback" class="feedback"></div>
+      <button class="btn btn-secondary" onclick="initMatching()" style="margin-top:1rem;">🔄 New Game</button>
+    </section>
+
+    <!-- SLIDE 4: Complete Dialogue -->
+    <section class="slide" id="slide-3">
+      <h2>💬 Complete Doctor-Patient Dialogue</h2>
+      <p style="margin-bottom: 1rem;">Change the symptoms and treatments using the dropdown menus. Click ▶️ to hear the full conversation!</p>
+      
+      <div class="dialogue-container">
+        <!-- Greeting -->
+        <div class="dialogue-line">
+          <span class="speaker-label doctor">Doctor</span>
+          <div>
+            <strong>Doctor:</strong> Buenos días. Soy el doctor García. 
+            <button class="tts-icon" onclick="speak('Buenos días. Soy el doctor García.', this)">🔊</button>
+          </div>
+        </div>
+        
+        <div class="dialogue-line">
+          <span class="speaker-label patient">Patient</span>
+          <div>
+            <strong>Patient:</strong> Buenos días, doctor.
+            <button class="tts-icon" onclick="speak('Buenos días, doctor.', this)">🔊</button>
+          </div>
+        </div>
+        
+        <!-- Symptoms -->
+        <div class="dialogue-line">
+          <span class="speaker-label doctor">Doctor</span>
+          <div>
+            <strong>Doctor:</strong> ¿Cómo estás? ¿Qué te duele?
+            <button class="tts-icon" onclick="speak('¿Cómo estás? ¿Qué te duele?', this)">🔊</button>
+          </div>
+        </div>
+        
+        <div class="dialogue-line">
+          <span class="speaker-label patient">Patient</span>
+          <div>
+            <strong>Patient:</strong> Me duele 
+            <select id="sel-body-part">
+              <option value="la cabeza">la cabeza</option>
+              <option value="la garganta">la garganta</option>
+              <option value="el estómago">el estómago</option>
+              <option value="la pierna">la pierna</option>
+              <option value="el pie">el pie</option>
+              <option value="la mano">la mano</option>
+            </select>
+            y tengo 
+            <select id="sel-symptom">
+              <option value="fiebre">fiebre</option>
+              <option value="tos">tos</option>
+              <option value="frío">frío</option>
+              <option value="calor">calor</option>
+              <option value="dolor">dolor</option>
+            </select>.
+            <button class="tts-icon" onclick="playPatientLine()">🔊</button>
+          </div>
+        </div>
+        
+        <!-- Diagnosis -->
+        <div class="dialogue-line">
+          <span class="speaker-label doctor">Doctor</span>
+          <div>
+            <strong>Doctor:</strong> Déjame ver... Tienes 
+            <select id="sel-diagnosis">
+              <option value="gripe">gripe</option>
+              <option value="un resfriado">un resfriado</option>
+              <option value="una infección">una infección</option>
+              <option value="un virus">un virus</option>
+            </select>.
+            <button class="tts-icon" onclick="playDoctorDiagnosis()">🔊</button>
+          </div>
+        </div>
+        
+        <!-- Treatment -->
+        <div class="dialogue-line">
+          <span class="speaker-label doctor">Doctor</span>
+          <div>
+            <strong>Doctor:</strong> Necesitas 
+            <select id="sel-treatment">
+              <option value="descansar">descansar</option>
+              <option value="tomar medicina">tomar medicina</option>
+              <option value="beber mucha agua">beber mucha agua</option>
+              <option value="tomar jarabe">tomar jarabe</option>
+            </select>
+            y 
+            <select id="sel-advice">
+              <option value="dormir mucho">dormir mucho</option>
+              <option value="comer frutas">comer frutas</option>
+              <option value="no ir a la escuela">no ir a la escuela</option>
+              <option value="volver en dos días">volver en dos días</option>
+            </select>.
+            <button class="tts-icon" onclick="playDoctorTreatment()">🔊</button>
+          </div>
+        </div>
+        
+        <!-- Farewell -->
+        <div class="dialogue-line">
+          <span class="speaker-label patient">Patient</span>
+          <div>
+            <strong>Patient:</strong> Gracias, doctor.
+            <button class="tts-icon" onclick="speak('Gracias, doctor.', this)">🔊</button>
+          </div>
+        </div>
+        
+        <div class="dialogue-line">
+          <span class="speaker-label doctor">Doctor</span>
+          <div>
+            <strong>Doctor:</strong> De nada. ¡Mejórate pronto!
+            <button class="tts-icon" onclick="speak('De nada. ¡Mejórate pronto!', this)">🔊</button>
+          </div>
+        </div>
+      </div>
+      
+      <div style="text-align:center; margin-top:1.5rem;">
+        <button class="btn btn-primary" onclick="playFullDialogue()">▶️ Play Full Dialogue</button>
+        <button class="btn btn-secondary" onclick="showCertificate()" style="margin-left:10px;">📜 Get Certificate</button>
+      </div>
+      
+      <div class="certificate" id="certificate">
+        <h2>🎉 Certificate of Completion</h2>
+        <p style="font-size:1.2rem; margin:1rem 0;">Congratulations!</p>
+        <p>You have successfully completed the Spanish Medical Vocabulary lesson.</p>
+        <p style="margin-top:1.5rem; font-size:0.9rem; color:#666;">Date: <span id="cert-date"></span></p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <button class="btn" id="prev-btn" disabled>⬅ Back</button>
+    <button class="btn btn-primary" id="next-btn">Next ➡</button>
+  </footer>
+</div>
+
+<script>
+  // TTS Setup
+  let voices = [];
+  const synth = window.speechSynthesis;
+  
+  function loadVoices() { 
+    voices = synth.getVoices(); 
+  }
+  if (synth.onvoiceschanged !== undefined) {
+    synth.onvoiceschanged = loadVoices;
+  }
+  loadVoices();
+
+  function getSpanishVoice() {
+    const es = voices.filter(v => v.lang.startsWith('es'));
+    return es.length > 0 ? es[0] : null;
+  }
+
+  function speak(text, el = null) {
+    if (!synth) return;
+    synth.cancel();
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.lang = 'es-ES';
+    utter.rate = 0.85;
+    const voice = getSpanishVoice();
+    if (voice) utter.voice = voice;
+    
+    if (el) {
+      el.classList.add('speaking');
+      utter.onend = () => el.classList.remove('speaking');
+    }
+    synth.speak(utter);
+  }
+
+  function playAllVocab() {
+    const phrases = [
+      'Me duele la cabeza', 'Me duele el estómago', 'Me duele la garganta',
+      'Tengo fiebre', 'Tengo tos', 'Me duele la pierna',
+      'Buenos días', '¿Qué te duele?', 'Tienes gripe',
+      'Necesitas descansar', 'Toma medicina', 'Mejórate pronto'
+    ];
+    let i = 0;
+    function playNext() {
+      if (i < phrases.length) {
+        speak(phrases[i]);
+        i++;
+        setTimeout(playNext, 1500);
+      }
+    }
+    playNext();
+  }
+
+  // Slide Navigation
+  let currentSlide = 0;
+  const slides = document.querySelectorAll('.slide');
+  const dots = document.querySelectorAll('.dot');
+  const prevBtn = document.getElementById('prev-btn');
+  const nextBtn = document.getElementById('next-btn');
+
+  function goToSlide(n) {
+    slides[currentSlide].classList.remove('active');
+    dots[currentSlide].classList.remove('active');
+    if (n > currentSlide) dots[currentSlide].classList.add('completed');
+    
+    currentSlide = Math.max(0, Math.min(n, slides.length - 1));
+    slides[currentSlide].classList.add('active');
+    dots[currentSlide].classList.add('active');
+    
+    prevBtn.disabled = currentSlide === 0;
+    nextBtn.disabled = currentSlide === slides.length - 1;
+    nextBtn.textContent = currentSlide === slides.length - 1 ? 'Finish' : 'Next ➡';
+  }
+
+  document.getElementById('start-btn').onclick = () => goToSlide(1);
+  prevBtn.onclick = () => goToSlide(currentSlide - 1);
+  nextBtn.onclick = () => {
+    if (currentSlide < slides.length - 1) goToSlide(currentSlide + 1);
+    else alert('🎉 Great job! You completed the clinic lesson!');
+  };
+  dots.forEach(d => d.onclick = () => goToSlide(parseInt(d.dataset.slide)));
+
+  // Matching Game
+  const matchData = [
+    { en: 'Head', es: 'La cabeza' },
+    { en: 'Stomach', es: 'El estómago' },
+    { en: 'Leg', es: 'La pierna' },
+    { en: 'Throat', es: 'La garganta' },
+    { en: 'Fever', es: 'Fiebre' },
+    { en: 'Cough', es: 'Tos' },
+    { en: 'Rest', es: 'Descansar' },
+    { en: 'Medicine', es: 'Medicina' }
+  ];
+
+  let selectedEn = null;
+  let selectedEs = null;
+  let matchesFound = 0;
+
+  function initMatching() {
+    const enCol = document.getElementById('english-col');
+    const esCol = document.getElementById('spanish-col');
+    enCol.innerHTML = '';
+    esCol.innerHTML = '';
+    matchesFound = 0;
+    document.getElementById('match-score').textContent = '0';
+    document.getElementById('match-feedback').style.display = 'none';
+    
+    const shuffledEn = [...matchData].sort(() => Math.random() - 0.5);
+    const shuffledEs = [...matchData].sort(() => Math.random() - 0.5);
+    
+    shuffledEn.forEach(item => {
+      const div = document.createElement('div');
+      div.className = 'match-item';
+      div.textContent = item.en;
+      div.dataset.type = 'en';
+      div.dataset.match = item.es;
+      div.onclick = () => handleMatchClick(div);
+      enCol.appendChild(div);
+    });
+    
+    shuffledEs.forEach(item => {
+      const div = document.createElement('div');
+      div.className = 'match-item';
+      div.textContent = item.es;
+      div.dataset.type = 'es';
+      div.dataset.match = item.en;
+      div.onclick = () => handleMatchClick(div);
+      esCol.appendChild(div);
+    });
+  }
+
+  function handleMatchClick(el) {
+    if (el.classList.contains('matched')) return;
+    
+    if (el.dataset.type === 'en') {
+      if (selectedEn) selectedEn.classList.remove('selected');
+      selectedEn = el;
+    } else {
+      if (selectedEs) selectedEs.classList.remove('selected');
+      selectedEs = el;
+    }
+    
+    el.classList.add('selected');
+    
+    if (selectedEn && selectedEs) {
+      setTimeout(checkMatch, 300);
+    }
+  }
+
+  function checkMatch() {
+    const fb = document.getElementById('match-feedback');
+    
+    if (selectedEn.dataset.match === selectedEs.textContent || 
+        selectedEs.dataset.match === selectedEn.textContent) {
+      selectedEn.classList.remove('selected');
+      selectedEs.classList.remove('selected');
+      selectedEn.classList.add('matched');
+      selectedEs.classList.add('matched');
+      matchesFound++;
+      document.getElementById('match-score').textContent = matchesFound;
+      speak(selectedEn.textContent + '. ' + selectedEs.textContent);
+      
+      if (matchesFound === matchData.length) {
+        fb.className = 'feedback success';
+        fb.textContent = '🎉 Perfect! All matches found!';
+        fb.style.display = 'block';
+        setTimeout(() => goToSlide(3), 1500);
+      }
+    } else {
+      selectedEn.classList.add('wrong');
+      selectedEs.classList.add('wrong');
+      setTimeout(() => {
+        selectedEn.classList.remove('wrong', 'selected');
+        selectedEs.classList.remove('wrong', 'selected');
+        selectedEn = null;
+        selectedEs = null;
+      }, 500);
+    }
+  }
+
+  initMatching();
+
+  // Dialogue Functions
+  function playPatientLine() {
+    const body = document.getElementById('sel-body-part').value;
+    const symptom = document.getElementById('sel-symptom').value;
+    speak(`Me duele ${body} y tengo ${symptom}.`);
+  }
+
+  function playDoctorDiagnosis() {
+    const diagnosis = document.getElementById('sel-diagnosis').value;
+    speak(`Déjame ver... Tienes ${diagnosis}.`);
+  }
+
+  function playDoctorTreatment() {
+    const treatment = document.getElementById('sel-treatment').value;
+    const advice = document.getElementById('sel-advice').value;
+    speak(`Necesitas ${treatment} y ${advice}.`);
+  }
+
+  function playFullDialogue() {
+    const body = document.getElementById('sel-body-part').value;
+    const symptom = document.getElementById('sel-symptom').value;
+    const diagnosis = document.getElementById('sel-diagnosis').value;
+    const treatment = document.getElementById('sel-treatment').value;
+    const advice = document.getElementById('sel-advice').value;
+    
+    const lines = [
+      'Buenos días. Soy el doctor García.',
+      'Buenos días, doctor.',
+      '¿Cómo estás? ¿Qué te duele?',
+      `Me duele ${body} y tengo ${symptom}.`,
+      'Déjame ver... Tienes ' + diagnosis + '.',
+      `Necesitas ${treatment} y ${advice}.`,
+      'Gracias, doctor.',
+      'De nada. ¡Mejórate pronto!'
+    ];
+    
+    let i = 0;
+    function playNext() {
+      if (i < lines.length) {
+        speak(lines[i]);
+        i++;
+        setTimeout(playNext, 2500);
+      }
+    }
+    playNext();
+  }
+
+  function showCertificate() {
+    const cert = document.getElementById('certificate');
+    document.getElementById('cert-date').textContent = new Date().toLocaleDateString('en-US');
+    cert.style.display = 'block';
+    cert.scrollIntoView({ behavior: 'smooth' });
+  }
+</script>
+</body>
+</html>
