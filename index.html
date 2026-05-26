@@ -38,7 +38,7 @@
   .btn-secondary:hover { background: #d9b35a; }
   .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
   
-  .tts-icon { cursor: pointer; display: inline-flex; align-items: center; gap: 8px; padding: 6px 10px; border-radius: 8px; background: var(--light); transition: background 0.2s; margin-left: 8px; }
+  .tts-icon { cursor: pointer; display: inline-flex; align-items: center; gap: 8px; padding: 6px 10px; border-radius: 8px; background: var(--light); transition: background 0.2s; margin-left: 8px; border: none; font-size: 1rem; }
   .tts-icon:hover { background: #dce4e8; }
   .tts-icon.speaking { background: var(--secondary); animation: pulse 1s infinite; }
   @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(233, 196, 106, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(233, 196, 106, 0); } 100% { box-shadow: 0 0 0 0 rgba(233, 196, 106, 0); } }
@@ -56,8 +56,8 @@
   .match-item { padding: 1.2rem; background: var(--light); border: 3px solid transparent; border-radius: var(--radius); cursor: pointer; transition: all 0.3s; text-align: center; font-weight: 600; min-height: 60px; display: flex; align-items: center; justify-content: center; word-wrap: break-word; line-height: 1.4; }
   .match-item:hover { background: #dce4e8; transform: translateY(-2px); }
   .match-item.selected { border-color: var(--primary); background: #d4edda; box-shadow: 0 4px 8px rgba(42, 157, 143, 0.3); }
-  .match-item.matched { border-color: var(--success); background: #d4edda; opacity: 0.5; pointer-events: none; }
-  .match-item.wrong { border-color: var(--error); animation: shake 0.5s; }
+  .match-item.matched { border-color: var(--success); background: #d4edda; opacity: 0.6; text-decoration: line-through; cursor: default; pointer-events: none; filter: grayscale(0.1); }
+  .match-item.wrong { border-color: var(--error); background: #f8d7da; animation: shake 0.5s; }
   @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
   
   .dialogue-container { background: #f8f9fa; padding: 2rem; border-radius: var(--radius); margin: 1.5rem 0; border-left: 5px solid var(--primary); }
@@ -78,6 +78,8 @@
   
   footer { display: flex; justify-content: space-between; margin-top: 1.5rem; }
   .score-display { font-size: 1.1rem; font-weight: bold; color: var(--primary); margin-bottom: 1rem; text-align: center; }
+  .mute-control { display: inline-flex; align-items: center; gap: 8px; margin-left: 1rem; cursor: pointer; background: var(--light); padding: 5px 12px; border-radius: 30px; font-size: 0.9rem; }
+  .mute-control:hover { background: #dce4e8; }
   
   @media (max-width: 700px) {
     .matching-grid { grid-template-columns: 1fr; }
@@ -103,7 +105,7 @@
   </header>
 
   <main>
-    <!-- SLIDE 1: Welcome -->
+    <!-- SLIDE 0: Welcome -->
     <section class="slide active" id="slide-0">
       <h2>👋 Welcome to the Clinic!</h2>
       <img src="cover.png" alt="Cover Image" style="width: 100%; max-width: 600px; display: block; margin: 1.5rem auto; border-radius: var(--radius); box-shadow: var(--shadow);">
@@ -119,397 +121,88 @@
       <button class="btn btn-primary" id="start-btn">🚀 Start Learning</button>
     </section>
 
-    <!-- SLIDE 2: Vocabulary with Words & Audio -->
+    <!-- SLIDE 1: Vocabulary -->
     <section class="slide" id="slide-1">
       <h2>📖 Vocabulary - Listen & Learn</h2>
       <p style="margin-bottom: 1rem;">Click 🔊 to hear each phrase. Read the Spanish and English meanings.</p>
       
       <div class="vocab-grid">
         <div class="vocab-card">
-          <h3>👩‍⚕️ Frases del médico (Doctor Phrases)</h3>
-          
-          <div class="vocab-item">
-            <div>
-              <span>Hola.</span>
-              <small>Hello.</small>
-            </div>
-            <button class="tts-icon" onclick="speak('Hola.', this)">🔊</button>
-          </div>
-          
-          <div class="vocab-item">
-            <div>
-              <span>¿Qué te pasa?</span>
-              <small>What's wrong with you?</small>
-            </div>
-            <button class="tts-icon" onclick="speak('¿Qué te pasa?', this)">🔊</button>
-          </div>
-          
-          <div class="vocab-item">
-            <div>
-              <span>¿Te duele la cabeza?</span>
-              <small>Does your head hurt?</small>
-            </div>
-            <button class="tts-icon" onclick="speak('¿Te duele la cabeza?', this)">🔊</button>
-          </div>
-          
-          <div class="vocab-item">
-            <div>
-              <span>¿Te duele la garganta?</span>
-              <small>Does your throat hurt?</small>
-            </div>
-            <button class="tts-icon" onclick="speak('¿Te duele la garganta?', this)">🔊</button>
-          </div>
-          
-          <div class="vocab-item">
-            <div>
-              <span>¿Te duele el estómago?</span>
-              <small>Does your stomach hurt?</small>
-            </div>
-            <button class="tts-icon" onclick="speak('¿Te duele el estómago?', this)">🔊</button>
-          </div>
-          
-          <div class="vocab-item">
-            <div>
-              <span>¿Te duele el oído?</span>
-              <small>Does your ear hurt?</small>
-            </div>
-            <button class="tts-icon" onclick="speak('¿Te duele el oído?', this)">🔊</button>
-          </div>
-          
-          <div class="vocab-item">
-            <div>
-              <span>¿Tienes tos?</span>
-              <small>Do you have a cough?</small>
-            </div>
-            <button class="tts-icon" onclick="speak('¿Tienes tos?', this)">🔊</button>
-          </div>
-          
-          <div class="vocab-item">
-            <div>
-              <span>Abre la boca.</span>
-              <small>Open your mouth.</small>
-            </div>
-            <button class="tts-icon" onclick="speak('Abre la boca.', this)">🔊</button>
-          </div>
-          
-          <div class="vocab-item">
-            <div>
-              <span>Di "aaa".</span>
-              <small>Say "aaa".</small>
-            </div>
-            <button class="tts-icon" onclick="speak('Di aaa.', this)">🔊</button>
-          </div>
-          
-          <div class="vocab-item">
-            <div>
-              <span>Está bien.</span>
-              <small>It's okay / Alright.</small>
-            </div>
-            <button class="tts-icon" onclick="speak('Está bien.', this)">🔊</button>
-          </div>
-          
-          <div class="vocab-item">
-            <div>
-              <span>Tienes que descansar.</span>
-              <small>You have to rest.</small>
-            </div>
-            <button class="tts-icon" onclick="speak('Tienes que descansar.', this)">🔊</button>
-          </div>
-          
-          <div class="vocab-item">
-            <div>
-              <span>Tienes que tomar jarabe.</span>
-              <small>You have to take syrup.</small>
-            </div>
-            <button class="tts-icon" onclick="speak('Tienes que tomar jarabe.', this)">🔊</button>
-          </div>
-          
-          <div class="vocab-item">
-            <div>
-              <span>Tienes que beber agua.</span>
-              <small>You have to drink water.</small>
-            </div>
-            <button class="tts-icon" onclick="speak('Tienes que beber agua.', this)">🔊</button>
-          </div>
-          
-          <div class="vocab-item">
-            <div>
-              <span>Tienes que tomar una pastilla.</span>
-              <small>You have to take a pill.</small>
-            </div>
-            <button class="tts-icon" onclick="speak('Tienes que tomar una pastilla.', this)">🔊</button>
-          </div>
-          
-          <div class="vocab-item">
-            <div>
-              <span>No, mejor descansa.</span>
-              <small>No, better rest.</small>
-            </div>
-            <button class="tts-icon" onclick="speak('No, mejor descansa.', this)">🔊</button>
-          </div>
-          
-          <div class="vocab-item">
-            <div>
-              <span>Adiós.</span>
-              <small>Goodbye.</small>
-            </div>
-            <button class="tts-icon" onclick="speak('Adiós.', this)">🔊</button>
-          </div>
+          <h3>👨‍⚕️ Frases del médico (Doctor Phrases)</h3>
+          <div class="vocab-item"><div><span>Hola.</span><small>Hello.</small></div><button class="tts-icon" onclick="speak('Hola.', this, 'es')">🔊</button></div>
+          <div class="vocab-item"><div><span>¿Qué te pasa?</span><small>What's wrong with you?</small></div><button class="tts-icon" onclick="speak('¿Qué te pasa?', this, 'es')">🔊</button></div>
+          <div class="vocab-item"><div><span>¿Te duele la cabeza?</span><small>Does your head hurt?</small></div><button class="tts-icon" onclick="speak('¿Te duele la cabeza?', this, 'es')">🔊</button></div>
+          <div class="vocab-item"><div><span>¿Te duele la garganta?</span><small>Does your throat hurt?</small></div><button class="tts-icon" onclick="speak('¿Te duele la garganta?', this, 'es')">🔊</button></div>
+          <div class="vocab-item"><div><span>¿Te duele el estómago?</span><small>Does your stomach hurt?</small></div><button class="tts-icon" onclick="speak('¿Te duele el estómago?', this, 'es')">🔊</button></div>
+          <div class="vocab-item"><div><span>¿Te duele el oído?</span><small>Does your ear hurt?</small></div><button class="tts-icon" onclick="speak('¿Te duele el oído?', this, 'es')">🔊</button></div>
+          <div class="vocab-item"><div><span>¿Tienes tos?</span><small>Do you have a cough?</small></div><button class="tts-icon" onclick="speak('¿Tienes tos?', this, 'es')">🔊</button></div>
+          <div class="vocab-item"><div><span>Abre la boca.</span><small>Open your mouth.</small></div><button class="tts-icon" onclick="speak('Abre la boca.', this, 'es')">🔊</button></div>
+          <div class="vocab-item"><div><span>Di "aaa".</span><small>Say "aaa".</small></div><button class="tts-icon" onclick="speak('Di aaa.', this, 'es')">🔊</button></div>
+          <div class="vocab-item"><div><span>Está bien.</span><small>It's okay / Alright.</small></div><button class="tts-icon" onclick="speak('Está bien.', this, 'es')">🔊</button></div>
+          <div class="vocab-item"><div><span>Tienes que descansar.</span><small>You have to rest.</small></div><button class="tts-icon" onclick="speak('Tienes que descansar.', this, 'es')">🔊</button></div>
+          <div class="vocab-item"><div><span>Tienes que tomar jarabe.</span><small>You have to take syrup.</small></div><button class="tts-icon" onclick="speak('Tienes que tomar jarabe.', this, 'es')">🔊</button></div>
+          <div class="vocab-item"><div><span>Tienes que beber agua.</span><small>You have to drink water.</small></div><button class="tts-icon" onclick="speak('Tienes que beber agua.', this, 'es')">🔊</button></div>
+          <div class="vocab-item"><div><span>Tienes que tomar una pastilla.</span><small>You have to take a pill.</small></div><button class="tts-icon" onclick="speak('Tienes que tomar una pastilla.', this, 'es')">🔊</button></div>
+          <div class="vocab-item"><div><span>No, mejor descansa.</span><small>No, better rest.</small></div><button class="tts-icon" onclick="speak('No, mejor descansa.', this, 'es')">🔊</button></div>
+          <div class="vocab-item"><div><span>Adiós.</span><small>Goodbye.</small></div><button class="tts-icon" onclick="speak('Adiós.', this, 'es')">🔊</button></div>
         </div>
         
         <div class="vocab-card">
           <h3>🤒 Frases del paciente (Patient Phrases)</h3>
-          
-          <div class="vocab-item">
-            <div>
-              <span>Hola, doctor(a).</span>
-              <small>Hello, doctor.</small>
-            </div>
-            <button class="tts-icon" onclick="speak('Hola, doctora.', this)">🔊</button>
-          </div>
-          
-          <div class="vocab-item">
-            <div>
-              <span>Me duele la cabeza</span>
-              <small>My head hurts</small>
-            </div>
-            <button class="tts-icon" onclick="speak('Me duele la cabeza', this)">🔊</button>
-          </div>
-          
-          <div class="vocab-item">
-            <div>
-              <span>Me duele la garganta</span>
-              <small>My throat hurts</small>
-            </div>
-            <button class="tts-icon" onclick="speak('Me duele la garganta', this)">🔊</button>
-          </div>
-          
-          <div class="vocab-item">
-            <div>
-              <span>Me duele el estómago</span>
-              <small>My stomach hurts</small>
-            </div>
-            <button class="tts-icon" onclick="speak('Me duele el estómago', this)">🔊</button>
-          </div>
-          
-          <div class="vocab-item">
-            <div>
-              <span>Me duele el oído</span>
-              <small>My ear hurts</small>
-            </div>
-            <button class="tts-icon" onclick="speak('Me duele el oído', this)">🔊</button>
-          </div>
-          
-          <div class="vocab-item">
-            <div>
-              <span>Sí, tengo tos.</span>
-              <small>Yes, I have a cough.</small>
-            </div>
-            <button class="tts-icon" onclick="speak('Sí, tengo tos.', this)">🔊</button>
-          </div>
-          
-          <div class="vocab-item">
-            <div>
-              <span>No, no tengo tos.</span>
-              <small>No, I don't have a cough.</small>
-            </div>
-            <button class="tts-icon" onclick="speak('No, no tengo tos.', this)">🔊</button>
-          </div>
-          
-          <div class="vocab-item">
-            <div>
-              <span>Aaa.</span>
-              <small>Aaa.</small>
-            </div>
-            <button class="tts-icon" onclick="speak('Aaa.', this)">🔊</button>
-          </div>
-          
-          <div class="vocab-item">
-            <div>
-              <span>¿Puedo jugar?</span>
-              <small>Can I play?</small>
-            </div>
-            <button class="tts-icon" onclick="speak('¿Puedo jugar?', this)">🔊</button>
-          </div>
-          
-          <div class="vocab-item">
-            <div>
-              <span>Adiós.</span>
-              <small>Goodbye.</small>
-            </div>
-            <button class="tts-icon" onclick="speak('Adiós.', this)">🔊</button>
-          </div>
-          
-          <div class="vocab-item">
-            <div>
-              <span>Gracias.</span>
-              <small>Thank you.</small>
-            </div>
-            <button class="tts-icon" onclick="speak('Gracias.', this)">🔊</button>
-          </div>
+          <div class="vocab-item"><div><span>Hola, doctor(a).</span><small>Hello, doctor.</small></div><button class="tts-icon" onclick="speak('Hola, doctora.', this, 'es')">🔊</button></div>
+          <div class="vocab-item"><div><span>Me duele la cabeza</span><small>My head hurts</small></div><button class="tts-icon" onclick="speak('Me duele la cabeza', this, 'es')">🔊</button></div>
+          <div class="vocab-item"><div><span>Me duele la garganta</span><small>My throat hurts</small></div><button class="tts-icon" onclick="speak('Me duele la garganta', this, 'es')">🔊</button></div>
+          <div class="vocab-item"><div><span>Me duele el estómago</span><small>My stomach hurts</small></div><button class="tts-icon" onclick="speak('Me duele el estómago', this, 'es')">🔊</button></div>
+          <div class="vocab-item"><div><span>Me duele el oído</span><small>My ear hurts</small></div><button class="tts-icon" onclick="speak('Me duele el oído', this, 'es')">🔊</button></div>
+          <div class="vocab-item"><div><span>Sí, tengo tos.</span><small>Yes, I have a cough.</small></div><button class="tts-icon" onclick="speak('Sí, tengo tos.', this, 'es')">🔊</button></div>
+          <div class="vocab-item"><div><span>No, no tengo tos.</span><small>No, I don't have a cough.</small></div><button class="tts-icon" onclick="speak('No, no tengo tos.', this, 'es')">🔊</button></div>
+          <div class="vocab-item"><div><span>Aaa.</span><small>Aaa.</small></div><button class="tts-icon" onclick="speak('Aaa.', this, 'es')">🔊</button></div>
+          <div class="vocab-item"><div><span>¿Puedo jugar?</span><small>Can I play?</small></div><button class="tts-icon" onclick="speak('¿Puedo jugar?', this, 'es')">🔊</button></div>
+          <div class="vocab-item"><div><span>Adiós.</span><small>Goodbye.</small></div><button class="tts-icon" onclick="speak('Adiós.', this, 'es')">🔊</button></div>
+          <div class="vocab-item"><div><span>Gracias.</span><small>Thank you.</small></div><button class="tts-icon" onclick="speak('Gracias.', this, 'es')">🔊</button></div>
         </div>
       </div>
-      
       <div style="text-align:center;">
         <button class="btn btn-secondary" onclick="playAllVocab()">🔊 Play All Vocabulary</button>
       </div>
     </section>
 
-    <!-- SLIDE 3: Matching Game -->
+    <!-- SLIDE 2: Matching Game with mute button -->
     <section class="slide" id="slide-2">
       <h2>🎮 Dialogue Match - English ↔ Spanish</h2>
-      <p style="margin-bottom: 1rem;">Match the dialogue phrases! Click an English phrase, then click its Spanish equivalent. Find all pairs!</p>
-      <div class="score-display">Matches: <span id="match-score">0</span>/<span id="match-total">0</span></div>
-      
-      <div class="matching-grid">
-        <div class="matching-column" id="english-col">
-          <!-- Generated by JS -->
-        </div>
-        <div class="matching-column" id="spanish-col">
-          <!-- Generated by JS -->
+      <p style="margin-bottom: 1rem;">Match the dialogue phrases! Click an English phrase, then click its Spanish equivalent.</p>
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; margin-bottom: 0.5rem;">
+        <div class="score-display" style="margin-bottom:0;">Matches: <span id="match-score">0</span>/<span id="match-total">0</span></div>
+        <div class="mute-control" id="mute-toggle" onclick="toggleMatchingMute()">
+          <span id="mute-icon">🔊</span> <span id="mute-text">Sound On</span>
         </div>
       </div>
-      
+      <div class="matching-grid">
+        <div class="matching-column" id="english-col"></div>
+        <div class="matching-column" id="spanish-col"></div>
+      </div>
       <div id="match-feedback" class="feedback"></div>
       <button class="btn btn-secondary" onclick="initMatching()" style="margin-top:1rem;">🔄 New Game</button>
     </section>
 
-    <!-- SLIDE 4: Complete Dialogue -->
+    <!-- SLIDE 3: Complete Dialogue (Pablo) -->
     <section class="slide" id="slide-3">
       <h2>💬 Complete Doctor-Patient Dialogue</h2>
       <p style="margin-bottom: 1rem;">Change the symptoms and treatments using the dropdown menus. Click ▶️ to hear the full conversation!</p>
       
       <div class="dialogue-container">
-        <!-- Greeting -->
-        <div class="dialogue-line">
-          <span class="speaker-label doctor">Doctor</span>
-          <div>
-            <strong>Doctor:</strong> Hola.
-            <br><small style="color:#666;">Hello.</small>
-            <button class="tts-icon" onclick="speak('Hola.', this)">🔊</button>
-          </div>
-        </div>
-        
-        <div class="dialogue-line">
-          <span class="speaker-label patient">Patient</span>
-          <div>
-            <strong>Patient:</strong> Hola, doctor(a).
-            <br><small style="color:#666;">Hello, doctor.</small>
-            <button class="tts-icon" onclick="speak('Hola, doctora.', this)">🔊</button>
-          </div>
-        </div>
-        
-        <!-- Symptoms -->
-        <div class="dialogue-line">
-          <span class="speaker-label doctor">Doctor</span>
-          <div>
-            <strong>Doctor:</strong> ¿Qué te pasa?
-            <br><small style="color:#666;">What's wrong with you?</small>
-            <button class="tts-icon" onclick="speak('¿Qué te pasa?', this)">🔊</button>
-          </div>
-        </div>
-        
-        <div class="dialogue-line">
-          <span class="speaker-label patient">Patient</span>
-          <div>
-            <strong>Patient:</strong> Me duele 
-            <select id="sel-body-part">
-              <option value="la cabeza">la cabeza</option>
-              <option value="la garganta">la garganta</option>
-              <option value="el estómago">el estómago</option>
-              <option value="el oído">el oído</option>
-            </select>.
-            <br><small style="color:#666;">My head/throat/stomach/ear hurts.</small>
-            <button class="tts-icon" onclick="playPatientLine()">🔊</button>
-          </div>
-        </div>
-        
-        <!-- Cough question -->
-        <div class="dialogue-line">
-          <span class="speaker-label doctor">Doctor</span>
-          <div>
-            <strong>Doctor:</strong> ¿Tienes tos?
-            <br><small style="color:#666;">Do you have a cough?</small>
-            <button class="tts-icon" onclick="speak('¿Tienes tos?', this)">🔊</button>
-          </div>
-        </div>
-        
-        <div class="dialogue-line">
-          <span class="speaker-label patient">Patient</span>
-          <div>
-            <strong>Patient:</strong> 
-            <select id="sel-cough">
-              <option value="Sí, tengo tos.">Sí, tengo tos.</option>
-              <option value="No, no tengo tos.">No, no tengo tos.</option>
-            </select>
-            <br><small style="color:#666;">Yes, I have a cough. / No, I don't have a cough.</small>
-            <button class="tts-icon" onclick="playCoughResponse()">🔊</button>
-          </div>
-        </div>
-        
-        <!-- Examination -->
-        <div class="dialogue-line">
-          <span class="speaker-label doctor">Doctor</span>
-          <div>
-            <strong>Doctor:</strong> Abre la boca. Di "aaa".
-            <br><small style="color:#666;">Open your mouth. Say "aaa".</small>
-            <button class="tts-icon" onclick="speak('Abre la boca. Di aaa.', this)">🔊</button>
-          </div>
-        </div>
-        
-        <div class="dialogue-line">
-          <span class="speaker-label patient">Patient</span>
-          <div>
-            <strong>Patient:</strong> Aaa.
-            <br><small style="color:#666;">Aaa.</small>
-            <button class="tts-icon" onclick="speak('Aaa.', this)">🔊</button>
-          </div>
-        </div>
-        
-        <!-- Diagnosis -->
-        <div class="dialogue-line">
-          <span class="speaker-label doctor">Doctor</span>
-          <div>
-            <strong>Doctor:</strong> Está bien. Tienes que 
-            <select id="sel-treatment">
-              <option value="descansar">descansar</option>
-              <option value="tomar jarabe">tomar jarabe</option>
-              <option value="beber agua">beber agua</option>
-              <option value="tomar una pastilla">tomar una pastilla</option>
-            </select>.
-            <br><small style="color:#666;">Alright. You have to rest/take syrup/drink water/take a pill.</small>
-            <button class="tts-icon" onclick="playDoctorTreatment()">🔊</button>
-          </div>
-        </div>
-        
-        <!-- Can I play? -->
-        <div class="dialogue-line">
-          <span class="speaker-label patient">Patient</span>
-          <div>
-            <strong>Patient:</strong> ¿Puedo jugar?
-            <br><small style="color:#666;">Can I play?</small>
-            <button class="tts-icon" onclick="speak('¿Puedo jugar?', this)">🔊</button>
-          </div>
-        </div>
-        
-        <div class="dialogue-line">
-          <span class="speaker-label doctor">Doctor</span>
-          <div>
-            <strong>Doctor:</strong> No, mejor descansa. Adiós.
-            <br><small style="color:#666;">No, better rest. Goodbye.</small>
-            <button class="tts-icon" onclick="speak('No, mejor descansa. Adiós.', this)">🔊</button>
-          </div>
-        </div>
-        
-        <!-- Farewell -->
-        <div class="dialogue-line">
-          <span class="speaker-label patient">Patient</span>
-          <div>
-            <strong>Patient:</strong> Adiós. Gracias.
-            <br><small style="color:#666;">Goodbye. Thank you.</small>
-            <button class="tts-icon" onclick="speak('Adiós. Gracias.', this)">🔊</button>
-          </div>
-        </div>
+        <div class="dialogue-line"><span class="speaker-label doctor">Médico</span><div><strong>Médico:</strong> Hola, Pablo.<br><small style="color:#666;">Hello, Pablo.</small><button class="tts-icon" onclick="speak('Hola, Pablo.', this, 'es')">🔊</button></div></div>
+        <div class="dialogue-line"><span class="speaker-label patient">Pablo</span><div><strong>Pablo:</strong> Hola, doctora.<br><small style="color:#666;">Hello, doctor.</small><button class="tts-icon" onclick="speak('Hola, doctora.', this, 'es')">🔊</button></div></div>
+        <div class="dialogue-line"><span class="speaker-label doctor">Médico</span><div><strong>Médico:</strong> ¿Qué te pasa?<br><small style="color:#666;">What's wrong with you?</small><button class="tts-icon" onclick="speak('¿Qué te pasa?', this, 'es')">🔊</button></div></div>
+        <div class="dialogue-line"><span class="speaker-label patient">Pablo</span><div><strong>Pablo:</strong> Me duele <select id="sel-body-part"><option value="la cabeza">la cabeza</option><option value="la garganta">la garganta</option><option value="el estómago">el estómago</option><option value="el oído">el oído</option></select>.<br><small style="color:#666;">My head/throat/stomach/ear hurts.</small><button class="tts-icon" onclick="playPatientLine()">🔊</button></div></div>
+        <div class="dialogue-line"><span class="speaker-label doctor">Médico</span><div><strong>Médico:</strong> ¿Tienes tos?<br><small style="color:#666;">Do you have a cough?</small><button class="tts-icon" onclick="speak('¿Tienes tos?', this, 'es')">🔊</button></div></div>
+        <div class="dialogue-line"><span class="speaker-label patient">Pablo</span><div><strong>Pablo:</strong> <select id="sel-cough"><option value="Sí, tengo tos.">Sí, tengo tos.</option><option value="No, no tengo tos.">No, no tengo tos.</option></select><br><small style="color:#666;">Yes, I have a cough / No, I don't have a cough.</small><button class="tts-icon" onclick="playCoughResponse()">🔊</button></div></div>
+        <div class="dialogue-line"><span class="speaker-label doctor">Médico</span><div><strong>Médico:</strong> Abre la boca. Di "aaa".<br><small style="color:#666;">Open your mouth. Say "aaa".</small><button class="tts-icon" onclick="speak('Abre la boca. Di aaa.', this, 'es')">🔊</button></div></div>
+        <div class="dialogue-line"><span class="speaker-label patient">Pablo</span><div><strong>Pablo:</strong> Aaa.<br><small style="color:#666;">Aaa.</small><button class="tts-icon" onclick="speak('Aaa.', this, 'es')">🔊</button></div></div>
+        <div class="dialogue-line"><span class="speaker-label doctor">Médico</span><div><strong>Médico:</strong> Está bien. Tienes que <select id="sel-treatment"><option value="descansar">descansar</option><option value="tomar jarabe">tomar jarabe</option><option value="beber agua">beber agua</option><option value="tomar una pastilla">tomar una pastilla</option></select>.<br><small style="color:#666;">Alright. You have to rest/take syrup/drink water/take a pill.</small><button class="tts-icon" onclick="playDoctorTreatment()">🔊</button></div></div>
+        <div class="dialogue-line"><span class="speaker-label patient">Pablo</span><div><strong>Pablo:</strong> ¿Puedo jugar?<br><small style="color:#666;">Can I play?</small><button class="tts-icon" onclick="speak('¿Puedo jugar?', this, 'es')">🔊</button></div></div>
+        <div class="dialogue-line"><span class="speaker-label doctor">Médico</span><div><strong>Médico:</strong> No, mejor descansa. Adiós.<br><small style="color:#666;">No, better rest. Goodbye.</small><button class="tts-icon" onclick="speak('No, mejor descansa. Adiós.', this, 'es')">🔊</button></div></div>
+        <div class="dialogue-line"><span class="speaker-label patient">Pablo</span><div><strong>Pablo:</strong> Adiós. Gracias.<br><small style="color:#666;">Goodbye. Thank you.</small><button class="tts-icon" onclick="speak('Adiós. Gracias.', this, 'es')">🔊</button></div></div>
       </div>
       
       <div style="text-align:center; margin-top:1.5rem;">
@@ -519,7 +212,7 @@
       
       <div class="certificate" id="certificate">
         <h2>🎉 Certificate of Completion</h2>
-        <p style="font-size:1.2rem; margin:1rem 0;">Congratulations!</p>
+        <p style="font-size:1.2rem; margin:1rem 0;">Congratulations, Pablo!</p>
         <p>You have successfully completed the Spanish Medical Vocabulary lesson.</p>
         <p style="margin-top:1.5rem; font-size:0.9rem; color:#666;">Date: <span id="cert-date"></span></p>
       </div>
@@ -533,7 +226,7 @@
 </div>
 
 <script>
-  // TTS Setup
+  // TTS Setup with language support
   let voices = [];
   const synth = window.speechSynthesis;
   
@@ -550,14 +243,25 @@
     return es.length > 0 ? es[0] : null;
   }
 
-  function speak(text, el = null) {
+  function getEnglishVoice() {
+    const en = voices.filter(v => v.lang.startsWith('en-US') || v.lang.startsWith('en-GB'));
+    return en.length > 0 ? en[0] : null;
+  }
+
+  function speak(text, el = null, lang = 'es') {
     if (!synth) return;
     synth.cancel();
     const utter = new SpeechSynthesisUtterance(text);
-    utter.lang = 'es-ES';
+    if (lang === 'en') {
+      utter.lang = 'en-US';
+      const voice = getEnglishVoice();
+      if (voice) utter.voice = voice;
+    } else {
+      utter.lang = 'es-ES';
+      const voice = getSpanishVoice();
+      if (voice) utter.voice = voice;
+    }
     utter.rate = 0.85;
-    const voice = getSpanishVoice();
-    if (voice) utter.voice = voice;
     
     if (el) {
       el.classList.add('speaking');
@@ -566,42 +270,43 @@
     synth.speak(utter);
   }
 
+  // Global mute flag for matching game auto-speak
+  let matchingMuted = false;
+
+  function toggleMatchingMute() {
+    matchingMuted = !matchingMuted;
+    const muteIcon = document.getElementById('mute-icon');
+    const muteText = document.getElementById('mute-text');
+    if (matchingMuted) {
+      muteIcon.textContent = '🔇';
+      muteText.textContent = 'Sound Off';
+    } else {
+      muteIcon.textContent = '🔊';
+      muteText.textContent = 'Sound On';
+    }
+  }
+
+  function playMatchPronunciation(enText, esText) {
+    if (matchingMuted) return;
+    // Speak English first, then Spanish
+    speak(enText, null, 'en');
+    setTimeout(() => {
+      speak(esText, null, 'es');
+    }, 1200);
+  }
+
   function playAllVocab() {
     const phrases = [
-      // Doctor phrases
-      'Hola.',
-      '¿Qué te pasa?',
-      '¿Te duele la cabeza?',
-      '¿Te duele la garganta?',
-      '¿Te duele el estómago?',
-      '¿Te duele el oído?',
-      '¿Tienes tos?',
-      'Abre la boca.',
-      'Di aaa.',
-      'Está bien.',
-      'Tienes que descansar.',
-      'Tienes que tomar jarabe.',
-      'Tienes que beber agua.',
-      'Tienes que tomar una pastilla.',
-      'No, mejor descansa.',
-      'Adiós.',
-      // Patient phrases
-      'Hola, doctora.',
-      'Me duele la cabeza',
-      'Me duele la garganta',
-      'Me duele el estómago',
-      'Me duele el oído',
-      'Sí, tengo tos.',
-      'No, no tengo tos.',
-      'Aaa.',
-      '¿Puedo jugar?',
-      'Adiós.',
-      'Gracias.'
+      'Hola.', '¿Qué te pasa?', '¿Te duele la cabeza?', '¿Te duele la garganta?', '¿Te duele el estómago?', '¿Te duele el oído?',
+      '¿Tienes tos?', 'Abre la boca.', 'Di aaa.', 'Está bien.', 'Tienes que descansar.', 'Tienes que tomar jarabe.',
+      'Tienes que beber agua.', 'Tienes que tomar una pastilla.', 'No, mejor descansa.', 'Adiós.',
+      'Hola, doctora.', 'Me duele la cabeza', 'Me duele la garganta', 'Me duele el estómago', 'Me duele el oído',
+      'Sí, tengo tos.', 'No, no tengo tos.', 'Aaa.', '¿Puedo jugar?', 'Adiós.', 'Gracias.'
     ];
     let i = 0;
     function playNext() {
       if (i < phrases.length) {
-        speak(phrases[i]);
+        speak(phrases[i], null, 'es');
         i++;
         setTimeout(playNext, 1500);
       }
@@ -625,7 +330,6 @@
     slides[currentSlide].classList.add('active');
     dots[currentSlide].classList.add('active');
     
-    // Re-initialize matching game when entering slide 2
     if (currentSlide === 2) {
       initMatching();
     }
@@ -643,170 +347,173 @@
   };
   dots.forEach(d => d.onclick = () => goToSlide(parseInt(d.dataset.slide)));
 
-  // Matching Game - Updated to match new dialogue phrases
-  const matchData = [
-    { en: 'Hello.', es: 'Hola.' },
-    { en: "What's wrong with you?", es: '¿Qué te pasa?' },
-    { en: 'Does your head hurt?', es: '¿Te duele la cabeza?' },
-    { en: 'Does your throat hurt?', es: '¿Te duele la garganta?' },
-    { en: 'Does your stomach hurt?', es: '¿Te duele el estómago?' },
-    { en: 'Does your ear hurt?', es: '¿Te duele el oído?' },
-    { en: 'Do you have a cough?', es: '¿Tienes tos?' },
-    { en: 'Open your mouth.', es: 'Abre la boca.' },
-    { en: 'Say "aaa".', es: 'Di "aaa".' },
-    { en: "It's okay / Alright.", es: 'Está bien.' },
-    { en: 'You have to rest.', es: 'Tienes que descansar.' },
-    { en: 'You have to take syrup.', es: 'Tienes que tomar jarabe.' },
-    { en: 'You have to drink water.', es: 'Tienes que beber agua.' },
-    { en: 'You have to take a pill.', es: 'Tienes que tomar una pastilla.' },
-    { en: 'No, better rest.', es: 'No, mejor descansa.' },
-    { en: 'Goodbye.', es: 'Adiós.' },
-    { en: 'Hello, doctor.', es: 'Hola, doctor(a).' },
-    { en: 'My head hurts', es: 'Me duele la cabeza' },
-    { en: 'My throat hurts', es: 'Me duele la garganta' },
-    { en: 'My stomach hurts', es: 'Me duele el estómago' },
-    { en: 'My ear hurts', es: 'Me duele el oído' },
-    { en: 'Yes, I have a cough.', es: 'Sí, tengo tos.' },
-    { en: "No, I don't have a cough.", es: 'No, no tengo tos.' },
-    { en: 'Aaa.', es: 'Aaa.' },
-    { en: 'Can I play?', es: '¿Puedo jugar?' },
-    { en: 'Goodbye.', es: 'Adiós.' },
-    { en: 'Thank you.', es: 'Gracias.' }
+  // -------------------- MATCHING GAME --------------------
+  const matchingPairs = [
+    { id: 1, en: "Hello.", es: "Hola." },
+    { id: 2, en: "What's wrong with you?", es: "¿Qué te pasa?" },
+    { id: 3, en: "Does your head hurt?", es: "¿Te duele la cabeza?" },
+    { id: 4, en: "Does your throat hurt?", es: "¿Te duele la garganta?" },
+    { id: 5, en: "Does your stomach hurt?", es: "¿Te duele el estómago?" },
+    { id: 6, en: "Does your ear hurt?", es: "¿Te duele el oído?" },
+    { id: 7, en: "Do you have a cough?", es: "¿Tienes tos?" },
+    { id: 8, en: "Open your mouth.", es: "Abre la boca." },
+    { id: 9, en: "Say \"aaa\".", es: "Di \"aaa\"." },
+    { id: 10, en: "It's okay / Alright.", es: "Está bien." },
+    { id: 11, en: "You have to rest.", es: "Tienes que descansar." },
+    { id: 12, en: "You have to take syrup.", es: "Tienes que tomar jarabe." },
+    { id: 13, en: "You have to drink water.", es: "Tienes que beber agua." },
+    { id: 14, en: "You have to take a pill.", es: "Tienes que tomar una pastilla." },
+    { id: 15, en: "No, better rest.", es: "No, mejor descansa." },
+    { id: 16, en: "Goodbye.", es: "Adiós." },
+    { id: 17, en: "Hello, doctor.", es: "Hola, doctor(a)." },
+    { id: 18, en: "My head hurts", es: "Me duele la cabeza" },
+    { id: 19, en: "My throat hurts", es: "Me duele la garganta" },
+    { id: 20, en: "My stomach hurts", es: "Me duele el estómago" },
+    { id: 21, en: "My ear hurts", es: "Me duele el oído" },
+    { id: 22, en: "Yes, I have a cough.", es: "Sí, tengo tos." },
+    { id: 23, en: "No, I don't have a cough.", es: "No, no tengo tos." },
+    { id: 24, en: "Aaa.", es: "Aaa." },
+    { id: 25, en: "Can I play?", es: "¿Puedo jugar?" },
+    { id: 26, en: "Thank you.", es: "Gracias." }
   ];
 
-  let selectedEn = null;
-  let selectedEs = null;
-  let matchesFound = 0;
+  let selectedEnglishItem = null;
+  let selectedSpanishItem = null;
+  let matchedCount = 0;
 
   function initMatching() {
     const enCol = document.getElementById('english-col');
     const esCol = document.getElementById('spanish-col');
     enCol.innerHTML = '';
     esCol.innerHTML = '';
-    matchesFound = 0;
-    selectedEn = null;
-    selectedEs = null;
+    matchedCount = 0;
+    selectedEnglishItem = null;
+    selectedSpanishItem = null;
     document.getElementById('match-score').textContent = '0';
-    document.getElementById('match-total').textContent = matchData.length;
+    document.getElementById('match-total').textContent = matchingPairs.length;
     document.getElementById('match-feedback').style.display = 'none';
     
-    // Use Fisher-Yates shuffle for proper randomization without overlapping positions
-    function shuffleArray(array) {
-      const shuffled = [...array];
-      for (let i = shuffled.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-      }
-      return shuffled;
+    // Shuffle copies of pairs for each column independently
+    const shuffledEn = [...matchingPairs];
+    const shuffledEs = [...matchingPairs];
+    for (let i = shuffledEn.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffledEn[i], shuffledEn[j]] = [shuffledEn[j], shuffledEn[i]];
+    }
+    for (let i = shuffledEs.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffledEs[i], shuffledEs[j]] = [shuffledEs[j], shuffledEs[i]];
     }
     
-    const shuffledEn = shuffleArray(matchData);
-    const shuffledEs = shuffleArray(matchData);
-    
-    shuffledEn.forEach(item => {
+    shuffledEn.forEach(pair => {
       const div = document.createElement('div');
       div.className = 'match-item';
-      div.textContent = item.en;
+      div.textContent = pair.en;
       div.dataset.type = 'en';
-      div.dataset.match = item.es;
-      div.onclick = () => handleMatchClick(div);
+      div.dataset.pairId = pair.id;
+      div.onclick = () => onMatchClick(div);
       enCol.appendChild(div);
     });
     
-    shuffledEs.forEach(item => {
+    shuffledEs.forEach(pair => {
       const div = document.createElement('div');
       div.className = 'match-item';
-      div.textContent = item.es;
+      div.textContent = pair.es;
       div.dataset.type = 'es';
-      div.dataset.match = item.en;
-      div.onclick = () => handleMatchClick(div);
+      div.dataset.pairId = pair.id;
+      div.onclick = () => onMatchClick(div);
       esCol.appendChild(div);
     });
   }
 
-  function handleMatchClick(el) {
-    if (el.classList.contains('matched')) return;
+  function onMatchClick(clickedElement) {
+    if (clickedElement.classList.contains('matched')) return;
     
-    // Clear any existing selections before making a new one
-    const fb = document.getElementById('match-feedback');
-    fb.style.display = 'none';
+    const feedbackDiv = document.getElementById('match-feedback');
+    feedbackDiv.style.display = 'none';
     
-    if (el.dataset.type === 'en') {
-      if (selectedEn && selectedEn !== el) selectedEn.classList.remove('selected');
-      selectedEn = el;
-    } else {
-      if (selectedEs && selectedEs !== el) selectedEs.classList.remove('selected');
-      selectedEs = el;
-    }
-    
-    el.classList.add('selected');
-    
-    if (selectedEn && selectedEs && selectedEn !== el && selectedEs !== el) {
-      setTimeout(checkMatch, 300);
-    }
-  }
-
-  function checkMatch() {
-    const fb = document.getElementById('match-feedback');
-    
-    if (selectedEn.dataset.match === selectedEs.textContent || 
-        selectedEs.dataset.match === selectedEn.textContent) {
-      selectedEn.classList.remove('selected');
-      selectedEs.classList.remove('selected');
-      selectedEn.classList.add('matched');
-      selectedEs.classList.add('matched');
-      matchesFound++;
-      document.getElementById('match-score').textContent = matchesFound;
-      speak(selectedEn.textContent + '. ' + selectedEs.textContent);
-      
-      // Reset selections immediately after successful match
-      selectedEn = null;
-      selectedEs = null;
-      
-      if (matchesFound === matchData.length) {
-        fb.className = 'feedback success';
-        fb.textContent = '🎉 Perfect! All matches found!';
-        fb.style.display = 'block';
-        setTimeout(() => goToSlide(3), 1500);
+    if (clickedElement.dataset.type === 'en') {
+      if (selectedEnglishItem === clickedElement) {
+        selectedEnglishItem.classList.remove('selected');
+        selectedEnglishItem = null;
+        return;
       }
+      if (selectedEnglishItem) selectedEnglishItem.classList.remove('selected');
+      selectedEnglishItem = clickedElement;
+      selectedEnglishItem.classList.add('selected');
     } else {
-      selectedEn.classList.add('wrong');
-      selectedEs.classList.add('wrong');
-      setTimeout(() => {
-        selectedEn.classList.remove('wrong', 'selected');
-        selectedEs.classList.remove('wrong', 'selected');
-        selectedEn = null;
-        selectedEs = null;
-        fb.style.display = 'none';
-      }, 500);
+      if (selectedSpanishItem === clickedElement) {
+        selectedSpanishItem.classList.remove('selected');
+        selectedSpanishItem = null;
+        return;
+      }
+      if (selectedSpanishItem) selectedSpanishItem.classList.remove('selected');
+      selectedSpanishItem = clickedElement;
+      selectedSpanishItem.classList.add('selected');
+    }
+    
+    if (selectedEnglishItem && selectedSpanishItem) {
+      const enId = parseInt(selectedEnglishItem.dataset.pairId);
+      const esId = parseInt(selectedSpanishItem.dataset.pairId);
+      
+      if (enId === esId) {
+        // Correct match
+        selectedEnglishItem.classList.remove('selected');
+        selectedSpanishItem.classList.remove('selected');
+        selectedEnglishItem.classList.add('matched');
+        selectedSpanishItem.classList.add('matched');
+        matchedCount++;
+        document.getElementById('match-score').textContent = matchedCount;
+        
+        // Play pronunciation respecting mute
+        const correctEn = selectedEnglishItem.textContent;
+        const correctEs = selectedSpanishItem.textContent;
+        playMatchPronunciation(correctEn, correctEs);
+        
+        selectedEnglishItem = null;
+        selectedSpanishItem = null;
+        
+        if (matchedCount === matchingPairs.length) {
+          feedbackDiv.className = 'feedback success';
+          feedbackDiv.textContent = '🎉 Perfect! All matches found! Moving to dialogue...';
+          feedbackDiv.style.display = 'block';
+          setTimeout(() => goToSlide(3), 1500);
+        }
+      } else {
+        // Wrong match - flash red
+        selectedEnglishItem.classList.add('wrong');
+        selectedSpanishItem.classList.add('wrong');
+        
+        setTimeout(() => {
+          if (selectedEnglishItem) selectedEnglishItem.classList.remove('wrong', 'selected');
+          if (selectedSpanishItem) selectedSpanishItem.classList.remove('wrong', 'selected');
+          selectedEnglishItem = null;
+          selectedSpanishItem = null;
+        }, 500);
+      }
     }
   }
 
-  // initMatching() is called when entering slide 2 via goToSlide()
-  
-  // Dialogue Functions
+  // Dialogue Functions (all Spanish)
   function playPatientLine() {
     const body = document.getElementById('sel-body-part').value;
-    speak(`Me duele ${body}.`);
+    speak(`Me duele ${body}.`, null, 'es');
   }
-
   function playCoughResponse() {
     const cough = document.getElementById('sel-cough').value;
-    speak(cough);
+    speak(cough, null, 'es');
   }
-
   function playDoctorTreatment() {
     const treatment = document.getElementById('sel-treatment').value;
-    speak(`Está bien. Tienes que ${treatment}.`);
+    speak(`Está bien. Tienes que ${treatment}.`, null, 'es');
   }
-
   function playFullDialogue() {
     const body = document.getElementById('sel-body-part').value;
     const cough = document.getElementById('sel-cough').value;
     const treatment = document.getElementById('sel-treatment').value;
     
     const lines = [
-      'Hola.',
+      'Hola, Pablo.',
       'Hola, doctora.',
       '¿Qué te pasa?',
       `Me duele ${body}.`,
@@ -814,23 +521,21 @@
       cough,
       'Abre la boca. Di aaa.',
       'Aaa.',
-      'Está bien. Tienes que ' + treatment + '.',
+      `Está bien. Tienes que ${treatment}.`,
       '¿Puedo jugar?',
       'No, mejor descansa. Adiós.',
       'Adiós. Gracias.'
     ];
-    
     let i = 0;
     function playNext() {
       if (i < lines.length) {
-        speak(lines[i]);
+        speak(lines[i], null, 'es');
         i++;
         setTimeout(playNext, 2500);
       }
     }
     playNext();
   }
-
   function showCertificate() {
     const cert = document.getElementById('certificate');
     document.getElementById('cert-date').textContent = new Date().toLocaleDateString('en-US');
