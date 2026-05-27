@@ -136,7 +136,7 @@
           <div class="vocab-item"><div><span>¿Le duele la garganta?</span><small>Does your throat hurt?</small></div><button class="tts-icon" onclick="speak('Le duele la garganta', this, 'es')">🔊</button></div>
           <div class="vocab-item"><div><span>¿Le duele el estómago?</span><small>Does your stomach hurt?</small></div><button class="tts-icon" onclick="speak('Le duele el estómago', this, 'es')">🔊</button></div>
           <div class="vocab-item"><div><span>¿Le duele el oído?</span><small>Does your ear hurt?</small></div><button class="tts-icon" onclick="speak('Le duele el oído', this, 'es')">🔊</button></div>
-          <div class="vocab-item"><div><span>¿Tose usted?</span><small>Do you have a cough?</small></div><button class="tts-icon" onclick="speak('Tose usted', this, 'es')">🔊</button></div>
+          <div class="vocab-item"><div><span>¿Tienes tos?</span><small>Do you have a cough?</small></div><button class="tts-icon" onclick="speak('¿Tienes tos?', this, 'es')">🔊</button></div>
           <div class="vocab-item"><div><span>Abra la boca.</span><small>Open your mouth.</small></div><button class="tts-icon" onclick="speak('Abra la boca.', this, 'es')">🔊</button></div>
           <div class="vocab-item"><div><span>Diga « a-a-a ».</span><small>Say "a-a-a".</small></div><button class="tts-icon" onclick="speak('Diga a-a-a.', this, 'es')">🔊</button></div>
           <div class="vocab-item"><div><span>Muy bien.</span><small>Very good / Alright.</small></div><button class="tts-icon" onclick="speak('Muy bien.', this, 'es')">🔊</button></div>
@@ -196,7 +196,7 @@
         <div class="dialogue-line"><span class="speaker-label patient">Pablo</span><div><strong>Pablo:</strong> Buenos días, doctor.<br><small style="color:#666;">Good morning, doctor.</small><button class="tts-icon" onclick="speak('Buenos días, doctor.', this, 'es')">🔊</button></div></div>
         <div class="dialogue-line"><span class="speaker-label doctor">Médico</span><div><strong>Médico:</strong> ¿Qué le pasa?<br><small style="color:#666;">What's wrong with you?</small><button class="tts-icon" onclick="speak('¿Qué le pasa?', this, 'es')">🔊</button></div></div>
         <div class="dialogue-line"><span class="speaker-label patient">Pablo</span><div><strong>Pablo:</strong> Me duele <select id="sel-body-part"><option value="la cabeza">la cabeza</option><option value="la garganta">la garganta</option><option value="el estómago">el estómago</option><option value="el oído">el oído</option></select>.<br><small style="color:#666;">My head/throat/stomach/ear hurts.</small><button class="tts-icon" onclick="playPatientLine()">🔊</button></div></div>
-        <div class="dialogue-line"><span class="speaker-label doctor">Médico</span><div><strong>Médico:</strong> ¿Tiene tos?<br><small style="color:#666;">Do you have a cough?</small><button class="tts-icon" onclick="speak('¿Tiene tos?', this, 'es')">🔊</button></div></div>
+        <div class="dialogue-line"><span class="speaker-label doctor">Médico</span><div><strong>Médico:</strong> ¿Tienes tos?<br><small style="color:#666;">Do you have a cough?</small><button class="tts-icon" onclick="speak('¿Tienes tos?', this, 'es')">🔊</button></div></div>
         <div class="dialogue-line"><span class="speaker-label patient">Pablo</span><div><strong>Pablo:</strong> <select id="sel-cough"><option value="Sí, tengo tos.">Sí, tengo tos.</option><option value="No, no tengo tos.">No, no tengo tos.</option></select><br><small style="color:#666;">Yes, I have a cough / No, I don't have a cough.</small><button class="tts-icon" onclick="playCoughResponse()">🔊</button></div></div>
         <div class="dialogue-line"><span class="speaker-label doctor">Médico</span><div><strong>Médico:</strong> Abra la boca. Diga « a-a-a ».<br><small style="color:#666;">Open your mouth. Say "a-a-a".</small><button class="tts-icon" onclick="speak('Abra la boca. Diga a-a-a.', this, 'es')">🔊</button></div></div>
         <div class="dialogue-line"><span class="speaker-label patient">Pablo</span><div><strong>Pablo:</strong> A-a-a.<br><small style="color:#666;">A-a-a.</small><button class="tts-icon" onclick="speak('A-a-a.', this, 'es')">🔊</button></div></div>
@@ -298,11 +298,11 @@
 
   function playAllVocab() {
     const phrases = [
-      'Buenos días.', 'Qué le pasa', 'Le duele la cabeza', 'Le duele la garganta', 'Le duele el estómago', 'Le duele el oído',
-      'Tose usted', 'Abra la boca.', 'Diga ah.', 'Muy bien.', 'Tiene que descansar.', 'Tiene que tomar jarabe.',
+      'Buenos días.', '¿Qué le pasa?', 'Le duele la cabeza', 'Le duele la garganta', 'Le duele el estómago', 'Le duele el oído',
+      '¿Tienes tos?', 'Abra la boca.', 'Diga a-a-a.', 'Muy bien.', 'Tiene que descansar.', 'Tiene que tomar jarabe.',
       'Tiene que beber agua.', 'Tiene que tomar una pastilla.', 'No, es mejor descansar.', 'Hasta luego.',
       'Buenos días, doctora.', 'Me duele la cabeza.', 'Me duele la garganta.', 'Me duele el estómago.', 'Me duele el oído.',
-      'Sí, toso.', 'No, no toso.', 'Ah.', 'Puedo jugar', 'Hasta luego.', 'Gracias.'
+      'Sí, tengo tos.', 'No, no tengo tos.', 'A-a-a.', '¿Puedo jugar?', 'Adiós.', 'Gracias.'
     ];
     let i = 0;
     function playNext() {
@@ -356,10 +356,10 @@
     { id: 4, en: "Does your throat hurt?", es: "¿Le duele la garganta?" },
     { id: 5, en: "Does your stomach hurt?", es: "¿Le duele el estómago?" },
     { id: 6, en: "Does your ear hurt?", es: "¿Le duele el oído?" },
-    { id: 7, en: "Do you have a cough?", es: "¿Tose usted?" },
+    { id: 7, en: "Do you have a cough?", es: "¿Tienes tos?" },
     { id: 8, en: "Open your mouth.", es: "Abra la boca." },
-    { id: 9, en: "Say \"ah\".", es: "Diga « ah »." },
-    { id: 10, en: "Very good / Alright.", es: "Muy bien." },
+    { id: 9, en: "Say \"a-a-a\".", es: "Diga « a-a-a »." },
+    { id: 10, en: "Very good.", es: "Muy bien." },
     { id: 11, en: "You have to rest.", es: "Tiene que descansar." },
     { id: 12, en: "You have to take syrup.", es: "Tiene que tomar jarabe." },
     { id: 13, en: "You have to drink water.", es: "Tiene que beber agua." },
@@ -371,9 +371,9 @@
     { id: 19, en: "My throat hurts.", es: "Me duele la garganta." },
     { id: 20, en: "My stomach hurts.", es: "Me duele el estómago." },
     { id: 21, en: "My ear hurts.", es: "Me duele el oído." },
-    { id: 22, en: "Yes, I have a cough.", es: "Sí, toso." },
-    { id: 23, en: "No, I don't have a cough.", es: "No, no toso." },
-    { id: 24, en: "Ah.", es: "Ah." },
+    { id: 22, en: "Yes, I have a cough.", es: "Sí, tengo tos." },
+    { id: 23, en: "No, I don't have a cough.", es: "No, no tengo tos." },
+    { id: 24, en: "A-a-a.", es: "A-a-a." },
     { id: 25, en: "Can I play?", es: "¿Puedo jugar?" },
     { id: 26, en: "Thank you.", es: "Gracias." }
   ];
@@ -518,7 +518,7 @@
       'Buenos días, doctor.',
       '¿Qué le pasa?',
       `Me duele ${body}.`,
-      '¿Tiene tos?',
+      '¿Tienes tos?',
       cough,
       'Abra la boca. Diga a-a-a.',
       'A-a-a.',
