@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>🏥 Clinique de Mots | A1 French Doctor's Clinic</title>
+<!-- Favicon -->
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="shortcut icon" href="favicon.ico">
 <style>
   :root {
     --primary: #2A9D8F;
@@ -21,12 +24,44 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); line-height: 1.5; }
   .app { max-width: 900px; margin: 2rem auto; padding: 0 1rem; }
-  header { text-align: center; margin-bottom: 1.5rem; }
+  header { margin-bottom: 1.5rem; }
+  
+  /* Logo + title row */
+  .logo-title-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+  }
+  .logo-img {
+    height: 55px;
+    width: auto;
+    display: block;
+    border-radius: 12px;
+    filter: drop-shadow(var(--shadow));
+    transition: transform 0.2s ease;
+  }
+  .logo-img:hover {
+    transform: scale(1.02);
+  }
+  .title-group h1 {
+    font-size: 1.8rem;
+    margin: 0;
+    color: var(--text);
+    line-height: 1.2;
+  }
+  .title-group p {
+    color: #666;
+    font-size: 0.9rem;
+    margin: 0.2rem 0 0 0;
+  }
+  
   .progress-dots { display: flex; justify-content: center; gap: 8px; margin-bottom: 1rem; }
   .dot { width: 32px; height: 32px; border-radius: 50%; background: var(--light); display: flex; align-items: center; justify-content: center; font-weight: bold; color: #777; transition: all 0.3s; }
   .dot.active { background: var(--primary); color: white; transform: scale(1.1); box-shadow: var(--shadow); }
   .dot.completed { background: var(--secondary); }
-  h1 { font-size: 2rem; margin-bottom: 0.5rem; color: var(--text); }
+  
   .slide { display: none; background: var(--card); padding: 2rem; border-radius: var(--radius); box-shadow: var(--shadow); min-height: 400px; }
   .slide.active { display: block; animation: fadeIn 0.4s ease; }
   @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -88,20 +123,30 @@
     .slide { padding: 1.2rem; min-height: auto; }
     footer { flex-direction: column; gap: 0.8rem; }
     .btn { width: 100%; }
+    .logo-title-row { gap: 12px; }
+    .logo-img { height: 45px; }
+    .title-group h1 { font-size: 1.4rem; }
   }
 </style>
 </head>
 <body>
 <div class="app">
   <header>
+    <!-- Logo row (left top corner) -->
+    <div class="logo-title-row">
+      <img src="logo.png" alt="Clinique de Mots Logo" class="logo-img">
+      <div class="title-group">
+        <h1>🏥 Clinique de Mots</h1>
+        <p>French A1 | At the Doctor's Office</p>
+      </div>
+    </div>
+    <!-- Progress dots (navigation) -->
     <div class="progress-dots">
       <div class="dot active" data-slide="0">1</div>
       <div class="dot" data-slide="1">2</div>
       <div class="dot" data-slide="2">3</div>
       <div class="dot" data-slide="3">4</div>
     </div>
-    <h1>🏥 Clinique de Mots</h1>
-    <p style="color:#666; font-size:0.9rem;">French A1 | At the Doctor's Office</p>
   </header>
 
   <main>
@@ -144,7 +189,7 @@
           <div class="vocab-item"><div><span>Vous devez prendre du sirop.</span><small>You have to take syrup.</small></div><button class="tts-icon" onclick="speak('Vous devez prendre du sirop.', this, 'fr')">🔊</button></div>
           <div class="vocab-item"><div><span>Vous devez boire de l'eau.</span><small>You have to drink water.</small></div><button class="tts-icon" onclick="speak('Vous devez boire de leau.', this, 'fr')">🔊</button></div>
           <div class="vocab-item"><div><span>Vous devez prendre une pilule</span><small>You have to take a pill.</small></div><button class="tts-icon" onclick="speak('Vous devez prendre une pilule.', this, 'fr')">🔊</button></div>
-          <div class="vocab-item"><div><span>Non, с'est mieux vous reposer.</span><small>No, better rest.</small></div><button class="tts-icon" onclick="speak('Non, сest mieux vous reposer.', this, 'fr')">🔊</button></div>
+          <div class="vocab-item"><div><span>Non, c'est mieux vous reposer.</span><small>No, better rest.</small></div><button class="tts-icon" onclick="speak('Non, cest mieux vous reposer.', this, 'fr')">🔊</button></div>
           <div class="vocab-item"><div><span>Au revoir.</span><small>Goodbye.</small></div><button class="tts-icon" onclick="speak('Au revoir.', this, 'fr')">🔊</button></div>
         </div>
         
