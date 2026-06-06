@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🏥 Klinik der Wörter | A1 German Doctor's Clinic</title>
+<!-- Favicon -->
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="shortcut icon" href="favicon.ico">
+<style>
+  :root {
+    --primary: #2A9D8F;
+    --secondary: #E9C46A;
+    --accent: #E76F51;
+    --bg: #F4F7F6;
+    --card: #FFFFFF;
+    --text: #264653;
+    --light: #E9ECEF;
+    --success: #2A9D8F;
+    --error: #E76F51;
+    --radius: 12px;
+    --shadow: 0 4px 12px rgba(0,0,0,0.08);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); line-height: 1.5; }
+  .app { max-width: 900px; margin: 2rem auto; padding: 0 1rem; }
+  header { margin-bottom: 1.5rem; }
+  
+  /* Logo + title row */
+  .logo-title-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+  }
+  .logo-img {
+    height: 55px;
+    width: auto;
+    display: block;
+    border-radius: 12px;
+    filter: drop-shadow(var(--shadow));
+    transition: transform 0.2s ease;
+  }
+  .logo-img:hover {
+    transform: scale(1.02);
+  }
+  .title-group h1 {
+    font-size: 1.8rem;
+    margin: 0;
+    color: var(--text);
+    line-height: 1.2;
+  }
+  .title-group p {
+    color: #666;
+    font-size: 0.9rem;
+    margin: 0.2rem 0 0 0;
+  }
+  
+  .progress-dots { display: flex; justify-content: center; gap: 8px; margin-bottom: 1rem; }
+  .dot { width: 32px; height: 32px; border-radius: 50%; background: var(--light); display: flex; align-items: center; justify-content: center; font-weight: bold; color: #777; transition: all 0.3s; }
+  .dot.active { background: var(--primary); color: white; transform: scale(1.1); box-shadow: var(--shadow); }
+  .dot.completed { background: var(--secondary); }
+  
+  .slide { display: none; background: var(--card); padding: 2rem; border-radius: var(--radius); box-shadow: var(--shadow); min-height: 400px; }
+  .slide.active { display: block; animation: fadeIn 0.4s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  
+  .btn { padding: 0.8rem 1.5rem; border: none; border-radius: var(--radius); font-size: 1rem; cursor: pointer; transition: all 0.2s; font-weight: 600; }
+  .btn-primary { background: var(--primary); color: white; }
+  .btn-primary:hover { background: #21867a; transform: translateY(-2px); }
+  .btn-secondary { background: var(--secondary); color: var(--text); }
+  .btn-secondary:hover { background: #d9b35a; }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+  
+  .tts-icon { cursor: pointer; display: inline-flex; align-items: center; gap: 8px; padding: 6px 10px; border-radius: 8px; background: var(--light); transition: background 0.2s; margin-left: 8px; border: none; font-size: 1rem; }
+  .tts-icon:hover { background: #dce4e8; }
+  .tts-icon.speaking { background: var(--secondary); animation: pulse 1s infinite; }
+  @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(233, 196, 106, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(233, 196, 106, 0); } 100% { box-shadow: 0 0 0 0 rgba(233, 196, 106, 0); } }
+  
+  .vocab-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin: 1.5rem 0; }
+  .vocab-card { padding: 1.2rem; border: 2px solid var(--light); border-radius: var(--radius); }
+  .vocab-card h3 { margin-bottom: 1rem; color: var(--primary); text-align: center; font-size: 1.3rem; }
+  .vocab-item { display: flex; justify-content: space-between; align-items: center; padding: 0.8rem; margin-bottom: 0.6rem; background: #f8f9fa; border-radius: 8px; transition: all 0.2s; }
+  .vocab-item:hover { background: var(--light); transform: translateX(5px); }
+  .vocab-item span { font-weight: 500; font-size: 1.05rem; }
+  .vocab-item small { display: block; color: #666; font-size: 0.85rem; margin-top: 2px; }
+  
+  .matching-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem; margin: 1.5rem 0; }
+  .matching-column { display: flex; flex-direction: column; gap: 1rem; }
+  .match-item { padding: 1.2rem; background: var(--light); border: 3px solid transparent; border-radius: var(--radius); cursor: pointer; transition: all 0.3s; text-align: center; font-weight: 600; min-height: 60px; display: flex; align-items: center; justify-content: center; word-wrap: break-word; line-height: 1.4; }
+  .match-item:hover { background: #dce4e8; transform: translateY(-2px); }
+  .match-item.selected { border-color: var(--primary); background: #d4edda; box-shadow: 0 4px 8px rgba(42, 157, 143, 0.3); }
+  .match-item.matched { border-color: var(--success); background: #d4edda; opacity: 0.6; text-decoration: line-through; cursor: default; pointer-events: none; filter: grayscale(0.1); }
+  .match-item.wrong { border-color: var(--error); background: #f8d7da; animation: shake 0.5s; }
+  @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
+  
+  .dialogue-container { background: #f8f9fa; padding: 2rem; border-radius: var(--radius); margin: 1.5rem 0; border-left: 5px solid var(--primary); }
+  .dialogue-line { margin-bottom: 1.5rem; padding: 1rem; background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+  .dialogue-line strong { color: var(--primary); margin-right: 0.5rem; }
+  select { padding: 8px 12px; font-size: 1rem; border-radius: 8px; border: 2px solid var(--light); background: white; cursor: pointer; margin: 0 4px; }
+  select:focus { border-color: var(--primary); outline: none; }
+  .speaker-label { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.85rem; margin-bottom: 0.5rem; }
+  .speaker-label.patient { background: #ffe5e5; color: #c92a2a; }
+  .speaker-label.doctor { background: #e5f3ff; color: #1864ab; }
+  
+  .feedback { margin-top: 1rem; padding: 1rem; border-radius: 8px; font-weight: bold; display: none; text-align: center; }
+  .feedback.success { background: #d4edda; color: #155724; display: block; }
+  .feedback.error { background: #f8d7da; color: #721c24; display: block; }
+  
+  .certificate { text-align: center; padding: 2rem; border: 3px double var(--secondary); border-radius: var(--radius); background: #fffdf5; display: none; margin-top: 1.5rem; }
+  .certificate h2 { color: var(--accent); margin-bottom: 1rem; }
+  
+  footer { display: flex; justify-content: space-between; margin-top: 1.5rem; }
+  .score-display { font-size: 1.1rem; font-weight: bold; color: var(--primary); margin-bottom: 1rem; text-align: center; }
+  .mute-control { display: inline-flex; align-items: center; gap: 8px; margin-left: 1rem; cursor: pointer; background: var(--light); padding: 5px 12px; border-radius: 30px; font-size: 0.9rem; }
+  .mute-control:hover { background: #dce4e8; }
+  
+  @media (max-width: 700px) {
+    .matching-grid { grid-template-columns: 1fr; }
+    .vocab-grid { grid-template-columns: 1fr; }
+    .app { padding: 0 0.5rem; }
+    .slide { padding: 1.2rem; min-height: auto; }
+    footer { flex-direction: column; gap: 0.8rem; }
+    .btn { width: 100%; }
+    .logo-title-row { gap: 12px; }
+    .logo-img { height: 45px; }
+    .title-group h1 { font-size: 1.4rem; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <!-- Logo row (left top corner) -->
+    <div class="logo-title-row">
+      <img src="logo.png" alt="Klinik der Wörter Logo" class="logo-img">
+      <div class="title-group">
+        <h1>🏥 Klinik der Wörter</h1>
+        <p>German A1 | At the Doctor's Office</p>
+      </div>
+    </div>
+    <!-- Progress dots (navigation) -->
+    <div class="progress-dots">
+      <div class="dot active" data-slide="0">1</div>
+      <div class="dot" data-slide="1">2</div>
+      <div class="dot" data-slide="2">3</div>
+      <div class="dot" data-slide="3">4</div>
+    </div>
+  </header>
+
+  <main>
+    <!-- SLIDE 0: Welcome -->
+    <section class="slide active" id="slide-0">
+      <h2>👋 Welcome to the Clinic!</h2>
+      <img src="cover.png" alt="Cover Image" style="width: 100%; max-width: 600px; display: block; margin: 1.5rem auto; border-radius: var(--radius); box-shadow: var(--shadow);">
+      <p style="margin: 1rem 0; font-size: 1.05rem;">
+        Learn to talk about health problems in German! Follow these 4 steps:
+      </p>
+      <ul style="margin-left: 1.5rem; margin-bottom: 1.5rem; color: #444; line-height: 2;">
+        <li><strong>Step 2:</strong> Listen to vocabulary with audio 🔊</li>
+        <li><strong>Step 3:</strong> Match English and German words</li>
+        <li><strong>Step 4:</strong> Practice a complete doctor-patient dialogue</li>
+      </ul>
+      <p style="margin-bottom: 1.5rem; font-size: 0.9rem; color: #777;">💡 Click 🔊 to hear pronunciation. Repeat out loud!</p>
+      <button class="btn btn-primary" id="start-btn">🚀 Start Learning</button>
+      <a href="index.html" class="btn btn-secondary" style="margin-left: 10px; text-decoration: none; display: inline-block;">🇫🇷 French Version</a>
+      <a href="index-spanish.html" class="btn btn-secondary" style="margin-left: 10px; text-decoration: none; display: inline-block;">🇪🇸 Spanish Version</a>
+    </section>
+
+    <!-- SLIDE 1: Vocabulary -->
+    <section class="slide" id="slide-1">
+      <h2>📖 Vocabulary - Listen & Learn</h2>
+      <p style="margin-bottom: 1rem;">Click 🔊 to hear each phrase. Read the German and English meanings.</p>
+      
+      <div class="vocab-grid">
+        <div class="vocab-card">
+          <h3>👨‍⚕️ Arztphrasen (Doctor Phrases)</h3>
+          <div class="vocab-item"><div><span>Guten Tag.</span><small>Hello / Good day.</small></div><button class="tts-icon" onclick="speak('Guten Tag.', this, 'de')">🔊</button></div>
+          <div class="vocab-item"><div><span>Was fehlt Ihnen?</span><small>What's wrong with you?</small></div><button class="tts-icon" onclick="speak('Was fehlt Ihnen?', this, 'de')">🔊</button></div>
+          <div class="vocab-item"><div><span>Haben Sie Kopfschmerzen?</span><small>Does your head hurt?</small></div><button class="tts-icon" onclick="speak('Haben Sie Kopfschmerzen?', this, 'de')">🔊</button></div>
+          <div class="vocab-item"><div><span>Haben Sie Halsschmerzen?</span><small>Does your throat hurt?</small></div><button class="tts-icon" onclick="speak('Haben Sie Halsschmerzen?', this, 'de')">🔊</button></div>
+          <div class="vocab-item"><div><span>Haben Sie Bauchschmerzen?</span><small>Does your stomach hurt?</small></div><button class="tts-icon" onclick="speak('Haben Sie Bauchschmerzen?', this, 'de')">🔊</button></div>
+          <div class="vocab-item"><div><span>Tut Ihr Ohr weh?</span><small>Does your ear hurt?</small></div><button class="tts-icon" onclick="speak('Tut Ihr Ohr weh?', this, 'de')">🔊</button></div>
+          <div class="vocab-item"><div><span>Haben Sie Husten?</span><small>Do you have a cough?</small></div><button class="tts-icon" onclick="speak('Haben Sie Husten?', this, 'de')">🔊</button></div>
+          <div class="vocab-item"><div><span>Machen Sie den Mund auf.</span><small>Open your mouth.</small></div><button class="tts-icon" onclick="speak('Machen Sie den Mund auf.', this, 'de')">🔊</button></div>
+          <div class="vocab-item"><div><span>Sagen Sie „a-a-a“.</span><small>Say "a-a-a".</small></div><button class="tts-icon" onclick="speak('Sagen Sie a-a-a.', this, 'de')">🔊</button></div>
+          <div class="vocab-item"><div><span>Gut so.</span><small>That's good / Alright.</small></div><button class="tts-icon" onclick="speak('Gut so.', this, 'de')">🔊</button></div>
+          <div class="vocab-item"><div><span>Sie müssen sich ausruhen.</span><small>You have to rest.</small></div><button class="tts-icon" onclick="speak('Sie müssen sich ausruhen.', this, 'de')">🔊</button></div>
+          <div class="vocab-item"><div><span>Sie müssen Hustensaft nehmen.</span><small>You have to take syrup.</small></div><button class="tts-icon" onclick="speak('Sie müssen Hustensaft nehmen.', this, 'de')">🔊</button></div>
+          <div class="vocab-item"><div><span>Sie müssen Wasser trinken.</span><small>You have to drink water.</small></div><button class="tts-icon" onclick="speak('Sie müssen Wasser trinken.', this, 'de')">🔊</button></div>
+          <div class="vocab-item"><div><span>Sie müssen eine Tablette nehmen.</span><small>You have to take a pill.</small></div><button class="tts-icon" onclick="speak('Sie müssen eine Tablette nehmen.', this, 'de')">🔊</button></div>
+          <div class="vocab-item"><div><span>Nein, besser ausruhen.</span><small>No, better rest.</small></div><button class="tts-icon" onclick="speak('Nein, besser ausruhen.', this, 'de')">🔊</button></div>
+          <div class="vocab-item"><div><span>Auf Wiedersehen.</span><small>Goodbye.</small></div><button class="tts-icon" onclick="speak('Auf Wiedersehen.', this, 'de')">🔊</button></div>
+        </div>
+        
+        <div class="vocab-card">
+          <h3>🤒 Patientenphrasen (Patient Phrases)</h3>
+          <div class="vocab-item"><div><span>Guten Tag, Herr Doktor / Frau Doktor.</span><small>Good morning, doctor.</small></div><button class="tts-icon" onclick="speak('Guten Tag, Herr Doktor.', this, 'de')">🔊</button></div>
+          <div class="vocab-item"><div><span>Ich habe Kopfschmerzen.</span><small>My head hurts.</small></div><button class="tts-icon" onclick="speak('Ich habe Kopfschmerzen.', this, 'de')">🔊</button></div>
+          <div class="vocab-item"><div><span>Ich habe Halsschmerzen.</span><small>My throat hurts.</small></div><button class="tts-icon" onclick="speak('Ich habe Halsschmerzen.', this, 'de')">🔊</button></div>
+          <div class="vocab-item"><div><span>Ich habe Bauchschmerzen.</span><small>My stomach hurts.</small></div><button class="tts-icon" onclick="speak('Ich habe Bauchschmerzen.', this, 'de')">🔊</button></div>
+          <div class="vocab-item"><div><span>Mein Ohr tut weh.</span><small>My ear hurts.</small></div><button class="tts-icon" onclick="speak('Mein Ohr tut weh.', this, 'de')">🔊</button></div>
+          <div class="vocab-item"><div><span>Ja, ich habe Husten.</span><small>Yes, I have a cough.</small></div><button class="tts-icon" onclick="speak('Ja, ich habe Husten.', this, 'de')">🔊</button></div>
+          <div class="vocab-item"><div><span>Nein, ich habe keinen Husten.</span><small>No, I don't have a cough.</small></div><button class="tts-icon" onclick="speak('Nein, ich habe keinen Husten.', this, 'de')">🔊</button></div>
+          <div class="vocab-item"><div><span>A-a-a.</span><small>A-a-a.</small></div><button class="tts-icon" onclick="speak('A-a-a.', this, 'de')">🔊</button></div>
+          <div class="vocab-item"><div><span>Kann ich spielen?</span><small>Can I play?</small></div><button class="tts-icon" onclick="speak('Kann ich spielen?', this, 'de')">🔊</button></div>
+          <div class="vocab-item"><div><span>Auf Wiedersehen.</span><small>Goodbye.</small></div><button class="tts-icon" onclick="speak('Auf Wiedersehen.', this, 'de')">🔊</button></div>
+          <div class="vocab-item"><div><span>Danke.</span><small>Thank you.</small></div><button class="tts-icon" onclick="speak('Danke.', this, 'de')">🔊</button></div>
+        </div>
+      </div>
+      <div style="text-align:center;">
+        <button class="btn btn-secondary" onclick="playAllVocab()">🔊 Play All Vocabulary</button>
+      </div>
+    </section>
+
+    <!-- SLIDE 2: Matching Game with mute button -->
+    <section class="slide" id="slide-2">
+      <h2>🎮 Dialogue Match - English ↔ German</h2>
+      <p style="margin-bottom: 1rem;">Match the dialogue phrases! Click an English phrase, then click its German equivalent.</p>
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; margin-bottom: 0.5rem;">
+        <div class="score-display" style="margin-bottom:0;">Matches: <span id="match-score">0</span>/<span id="match-total">0</span></div>
+        <div class="mute-control" id="mute-toggle" onclick="toggleMatchingMute()">
+          <span id="mute-icon">🔊</span> <span id="mute-text">Sound On</span>
+        </div>
+      </div>
+      <div class="matching-grid">
+        <div class="matching-column" id="english-col"></div>
+        <div class="matching-column" id="german-col"></div>
+      </div>
+      <div id="match-feedback" class="feedback"></div>
+      <button class="btn btn-secondary" onclick="initMatching()" style="margin-top:1rem;">🔄 New Game</button>
+    </section>
+
+    <!-- SLIDE 3: Complete Dialogue (Paul) -->
+    <section class="slide" id="slide-3">
+      <h2>💬 Complete Doctor-Patient Dialogue</h2>
+      <p style="margin-bottom: 1rem;">Change the symptoms and treatments using the dropdown menus. Click ▶️ to hear the full conversation!</p>
+      
+      <div class="dialogue-container">
+        <div class="dialogue-line"><span class="speaker-label doctor">Arzt</span><div><strong>Arzt:</strong> Guten Tag, Paul.<br><small style="color:#666;">Good day, Paul.</small><button class="tts-icon" onclick="speak('Guten Tag, Paul.', this, 'de')">🔊</button></div></div>
+        <div class="dialogue-line"><span class="speaker-label patient">Paul</span><div><strong>Paul:</strong> Guten Tag, Herr Doktor.<br><small style="color:#666;">Good day, doctor.</small><button class="tts-icon" onclick="speak('Guten Tag, Herr Doktor.', this, 'de')">🔊</button></div></div>
+        <div class="dialogue-line"><span class="speaker-label doctor">Arzt</span><div><strong>Arzt:</strong> Was fehlt Ihnen?<br><small style="color:#666;">What's wrong with you?</small><button class="tts-icon" onclick="speak('Was fehlt Ihnen?', this, 'de')">🔊</button></div></div>
+        <div class="dialogue-line"><span class="speaker-label patient">Paul</span><div><strong>Paul:</strong> Ich habe <select id="sel-body-part"><option value="Kopfschmerzen">Kopfschmerzen</option><option value="Halsschmerzen">Halsschmerzen</option><option value="Bauchschmerzen">Bauchschmerzen</option><option value="Ohrenschmerzen">Ohrenschmerzen</option></select>.<br><small style="color:#666;">I have a headache / sore throat / stomach ache / earache.</small><button class="tts-icon" onclick="playPatientLine()">🔊</button></div></div>
+        <div class="dialogue-line"><span class="speaker-label doctor">Arzt</span><div><strong>Arzt:</strong> Haben Sie Husten?<br><small style="color:#666;">Do you have a cough?</small><button class="tts-icon" onclick="speak('Haben Sie Husten?', this, 'de')">🔊</button></div></div>
+        <div class="dialogue-line"><span class="speaker-label patient">Paul</span><div><strong>Paul:</strong> <select id="sel-cough"><option value="Ja, ich habe Husten.">Ja, ich habe Husten.</option><option value="Nein, ich habe keinen Husten.">Nein, ich habe keinen Husten.</option></select><br><small style="color:#666;">Yes, I have a cough / No, I don't have a cough.</small><button class="tts-icon" onclick="playCoughResponse()">🔊</button></div></div>
+        <div class="dialogue-line"><span class="speaker-label doctor">Arzt</span><div><strong>Arzt:</strong> Machen Sie den Mund auf. Sagen Sie „a-a-a“.<br><small style="color:#666;">Open your mouth. Say "a-a-a".</small><button class="tts-icon" onclick="speak('Machen Sie den Mund auf. Sagen Sie a-a-a.', this, 'de')">🔊</button></div></div>
+        <div class="dialogue-line"><span class="speaker-label patient">Paul</span><div><strong>Paul:</strong> A-a-a.<br><small style="color:#666;">A-a-a.</small><button class="tts-icon" onclick="speak('A-a-a.', this, 'de')">🔊</button></div></div>
+        <div class="dialogue-line"><span class="speaker-label doctor">Arzt</span><div><strong>Arzt:</strong> Gut so. Sie müssen <select id="sel-treatment"><option value="sich ausruhen">sich ausruhen</option><option value="Hustensaft nehmen">Hustensaft nehmen</option><option value="Wasser trinken">Wasser trinken</option><option value="eine Tablette nehmen">eine Tablette nehmen</option></select>.<br><small style="color:#666;">Alright. You have to rest / take syrup / drink water / take a pill.</small><button class="tts-icon" onclick="playDoctorTreatment()">🔊</button></div></div>
+        <div class="dialogue-line"><span class="speaker-label patient">Paul</span><div><strong>Paul:</strong> Kann ich spielen?<br><small style="color:#666;">Can I play?</small><button class="tts-icon" onclick="speak('Kann ich spielen?', this, 'de')">🔊</button></div></div>
+        <div class="dialogue-line"><span class="speaker-label doctor">Arzt</span><div><strong>Arzt:</strong> Nein, besser ausruhen. Auf Wiedersehen.<br><small style="color:#666;">No, better rest. Goodbye.</small><button class="tts-icon" onclick="speak('Nein, besser ausruhen. Auf Wiedersehen.', this, 'de')">🔊</button></div></div>
+        <div class="dialogue-line"><span class="speaker-label patient">Paul</span><div><strong>Paul:</strong> Auf Wiedersehen. Danke.<br><small style="color:#666;">Goodbye. Thank you.</small><button class="tts-icon" onclick="speak('Auf Wiedersehen. Danke.', this, 'de')">🔊</button></div></div>
+      </div>
+
+      <div style="text-align:center; margin-top:1.5rem;">
+        <button class="btn btn-primary" onclick="playFullDialogue()">▶️ Play Full Dialogue</button>
+        <button class="btn btn-secondary" onclick="showCertificate()" style="margin-left:10px;">📜 Get Certificate</button>
+      </div>
+
+      <div class="certificate" id="certificate">
+        <h2>🎉 Certificate of Completion</h2>
+        <p style="font-size:1.2rem; margin:1rem 0;">Congratulations!</p>
+        <p>You have successfully completed the German Medical Vocabulary lesson.</p>
+        <p style="margin-top:1.5rem; font-size:0.9rem; color:#666;">Date: <span id="cert-date"></span></p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <button class="btn" id="prev-btn" disabled>⬅ Back</button>
+    <button class="btn btn-primary" id="next-btn">Next ➡</button>
+  </footer>
+</div>
+
+<script>
+  // TTS Setup with language support
+  let voices = [];
+  const synth = window.speechSynthesis;
+
+  function loadVoices() {
+    voices = synth.getVoices();
+  }
+  if (synth.onvoiceschanged !== undefined) {
+    synth.onvoiceschanged = loadVoices;
+  }
+  loadVoices();
+
+  function getGermanVoice() {
+    const de = voices.filter(v => v.lang.startsWith('de'));
+    return de.length > 0 ? de[0] : null;
+  }
+
+  function getEnglishVoice() {
+    const en = voices.filter(v => v.lang.startsWith('en-US') || v.lang.startsWith('en-GB'));
+    return en.length > 0 ? en[0] : null;
+  }
+
+  function speak(text, el = null, lang = 'de') {
+    if (!synth) return;
+    synth.cancel();
+    const utter = new SpeechSynthesisUtterance(text);
+    if (lang === 'en') {
+      utter.lang = 'en-US';
+      const voice = getEnglishVoice();
+      if (voice) utter.voice = voice;
+    } else {
+      utter.lang = 'de-DE';
+      const voice = getGermanVoice();
+      if (voice) utter.voice = voice;
+    }
+    utter.rate = 0.85;
+
+    if (el) {
+      el.classList.add('speaking');
+      utter.onend = () => el.classList.remove('speaking');
+    }
+    synth.speak(utter);
+  }
+
+  // Global mute flag for matching game auto-speak
+  let matchingMuted = false;
+
+  function toggleMatchingMute() {
+    matchingMuted = !matchingMuted;
+    const muteIcon = document.getElementById('mute-icon');
+    const muteText = document.getElementById('mute-text');
+    if (matchingMuted) {
+      muteIcon.textContent = '🔇';
+      muteText.textContent = 'Sound Off';
+    } else {
+      muteIcon.textContent = '🔊';
+      muteText.textContent = 'Sound On';
+    }
+  }
+
+  function playMatchPronunciation(enText, deText) {
+    if (matchingMuted) return;
+    // Speak English first, then German
+    speak(enText, null, 'en');
+    setTimeout(() => {
+      speak(deText, null, 'de');
+    }, 1200);
+  }
+
+  function playAllVocab() {
+    const phrases = [
+      'Guten Tag.', 'Was fehlt Ihnen?', 'Haben Sie Kopfschmerzen?', 'Haben Sie Halsschmerzen?', 'Haben Sie Bauchschmerzen?', 'Tut Ihr Ohr weh?',
+      'Haben Sie Husten?', 'Machen Sie den Mund auf.', 'Sagen Sie a-a-a.', 'Gut so.', 'Sie müssen sich ausruhen.', 'Sie müssen Hustensaft nehmen.',
+      'Sie müssen Wasser trinken.', 'Sie müssen eine Tablette nehmen.', 'Nein, besser ausruhen.', 'Auf Wiedersehen.',
+      'Guten Tag, Herr Doktor.', 'Ich habe Kopfschmerzen.', 'Ich habe Halsschmerzen.', 'Ich habe Bauchschmerzen.', 'Mein Ohr tut weh.',
+      'Ja, ich habe Husten.', 'Nein, ich habe keinen Husten.', 'A-a-a.', 'Kann ich spielen?', 'Auf Wiedersehen.', 'Danke.'
+    ];
+    let i = 0;
+    function playNext() {
+      if (i < phrases.length) {
+        speak(phrases[i], null, 'de');
+        i++;
+        setTimeout(playNext, 1500);
+      }
+    }
+    playNext();
+  }
+
+  // Slide Navigation
+  let currentSlide = 0;
+  const slides = document.querySelectorAll('.slide');
+  const dots = document.querySelectorAll('.dot');
+  const prevBtn = document.getElementById('prev-btn');
+  const nextBtn = document.getElementById('next-btn');
+
+  function goToSlide(n) {
+    slides[currentSlide].classList.remove('active');
+    dots[currentSlide].classList.remove('active');
+    if (n > currentSlide) dots[currentSlide].classList.add('completed');
+
+    currentSlide = Math.max(0, Math.min(n, slides.length - 1));
+    slides[currentSlide].classList.add('active');
+    dots[currentSlide].classList.add('active');
+
+    if (currentSlide === 2) {
+      initMatching();
+    }
+
+    prevBtn.disabled = currentSlide === 0;
+    nextBtn.disabled = currentSlide === slides.length - 1;
+    nextBtn.textContent = currentSlide === slides.length - 1 ? 'Finish' : 'Next ➡';
+  }
+
+  document.getElementById('start-btn').onclick = () => goToSlide(1);
+  prevBtn.onclick = () => goToSlide(currentSlide - 1);
+  nextBtn.onclick = () => {
+    if (currentSlide < slides.length - 1) goToSlide(currentSlide + 1);
+    else alert('🎉 Great job! You completed the clinic lesson!');
+  };
+  dots.forEach(d => d.onclick = () => goToSlide(parseInt(d.dataset.slide)));
+
+  // -------------------- MATCHING GAME --------------------
+  const matchingPairs = [
+    { id: 1, en: "Hello.", de: "Guten Tag." },
+    { id: 2, en: "What's wrong with you?", de: "Was fehlt Ihnen?" },
+    { id: 3, en: "Does your head hurt?", de: "Haben Sie Kopfschmerzen?" },
+    { id: 4, en: "Does your throat hurt?", de: "Haben Sie Halsschmerzen?" },
+    { id: 5, en: "Does your stomach hurt?", de: "Haben Sie Bauchschmerzen?" },
+    { id: 6, en: "Does your ear hurt?", de: "Tut Ihr Ohr weh?" },
+    { id: 7, en: "Do you have a cough?", de: "Haben Sie Husten?" },
+    { id: 8, en: "Open your mouth.", de: "Machen Sie den Mund auf." },
+    { id: 9, en: "Say \"a-a-a\".", de: "Sagen Sie „a-a-a“." },
+    { id: 10, en: "That's good.", de: "Gut so." },
+    { id: 11, en: "You have to rest.", de: "Sie müssen sich ausruhen." },
+    { id: 12, en: "You have to take syrup.", de: "Sie müssen Hustensaft nehmen." },
+    { id: 13, en: "You have to drink water.", de: "Sie müssen Wasser trinken." },
+    { id: 14, en: "You have to take a pill.", de: "Sie müssen eine Tablette nehmen." },
+    { id: 15, en: "No, better rest.", de: "Nein, besser ausruhen." },
+    { id: 16, en: "Goodbye.", de: "Auf Wiedersehen." },
+    { id: 17, en: "Good morning, doctor.", de: "Guten Tag, Herr Doktor." },
+    { id: 18, en: "My head hurts.", de: "Ich habe Kopfschmerzen." },
+    { id: 19, en: "My throat hurts.", de: "Ich habe Halsschmerzen." },
+    { id: 20, en: "My stomach hurts.", de: "Ich habe Bauchschmerzen." },
+    { id: 21, en: "My ear hurts.", de: "Mein Ohr tut weh." },
+    { id: 22, en: "Yes, I have a cough.", de: "Ja, ich habe Husten." },
+    { id: 23, en: "No, I don't have a cough.", de: "Nein, ich habe keinen Husten." },
+    { id: 24, en: "A-a-a.", de: "A-a-a." },
+    { id: 25, en: "Can I play?", de: "Kann ich spielen?" },
+    { id: 26, en: "Thank you.", de: "Danke." }
+  ];
+
+  let selectedEnglishItem = null;
+  let selectedGermanItem = null;
+  let matchedCount = 0;
+
+  function initMatching() {
+    const enCol = document.getElementById('english-col');
+    const deCol = document.getElementById('german-col');
+    enCol.innerHTML = '';
+    deCol.innerHTML = '';
+    matchedCount = 0;
+    selectedEnglishItem = null;
+    selectedGermanItem = null;
+    document.getElementById('match-score').textContent = '0';
+    document.getElementById('match-total').textContent = matchingPairs.length;
+    document.getElementById('match-feedback').style.display = 'none';
+
+    // Shuffle copies of pairs for each column independently
+    const shuffledEn = [...matchingPairs];
+    const shuffledDe = [...matchingPairs];
+    for (let i = shuffledEn.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffledEn[i], shuffledEn[j]] = [shuffledEn[j], shuffledEn[i]];
+    }
+    for (let i = shuffledDe.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffledDe[i], shuffledDe[j]] = [shuffledDe[j], shuffledDe[i]];
+    }
+
+    shuffledEn.forEach(pair => {
+      const div = document.createElement('div');
+      div.className = 'match-item';
+      div.textContent = pair.en;
+      div.dataset.type = 'en';
+      div.dataset.pairId = pair.id;
+      div.onclick = () => onMatchClick(div);
+      enCol.appendChild(div);
+    });
+
+    shuffledDe.forEach(pair => {
+      const div = document.createElement('div');
+      div.className = 'match-item';
+      div.textContent = pair.de;
+      div.dataset.type = 'de';
+      div.dataset.pairId = pair.id;
+      div.onclick = () => onMatchClick(div);
+      deCol.appendChild(div);
+    });
+  }
+
+  function onMatchClick(clickedElement) {
+    if (clickedElement.classList.contains('matched')) return;
+
+    const feedbackDiv = document.getElementById('match-feedback');
+    feedbackDiv.style.display = 'none';
+
+    if (clickedElement.dataset.type === 'en') {
+      if (selectedEnglishItem === clickedElement) {
+        selectedEnglishItem.classList.remove('selected');
+        selectedEnglishItem = null;
+        return;
+      }
+      if (selectedEnglishItem) selectedEnglishItem.classList.remove('selected');
+      selectedEnglishItem = clickedElement;
+      selectedEnglishItem.classList.add('selected');
+    } else {
+      if (selectedGermanItem === clickedElement) {
+        selectedGermanItem.classList.remove('selected');
+        selectedGermanItem = null;
+        return;
+      }
+      if (selectedGermanItem) selectedGermanItem.classList.remove('selected');
+      selectedGermanItem = clickedElement;
+      selectedGermanItem.classList.add('selected');
+    }
+
+    if (selectedEnglishItem && selectedGermanItem) {
+      const enId = parseInt(selectedEnglishItem.dataset.pairId);
+      const deId = parseInt(selectedGermanItem.dataset.pairId);
+
+      if (enId === deId) {
+        // Correct match
+        selectedEnglishItem.classList.remove('selected');
+        selectedGermanItem.classList.remove('selected');
+        selectedEnglishItem.classList.add('matched');
+        selectedGermanItem.classList.add('matched');
+        matchedCount++;
+        document.getElementById('match-score').textContent = matchedCount;
+
+        // Play pronunciation respecting mute
+        const correctEn = selectedEnglishItem.textContent;
+        const correctDe = selectedGermanItem.textContent;
+        playMatchPronunciation(correctEn, correctDe);
+
+        selectedEnglishItem = null;
+        selectedGermanItem = null;
+
+        if (matchedCount === matchingPairs.length) {
+          feedbackDiv.className = 'feedback success';
+          feedbackDiv.textContent = '🎉 Perfect! All matches found! Moving to dialogue...';
+          feedbackDiv.style.display = 'block';
+          setTimeout(() => goToSlide(3), 1500);
+        }
+      } else {
+        // Wrong match - flash red
+        selectedEnglishItem.classList.add('wrong');
+        selectedGermanItem.classList.add('wrong');
+
+        setTimeout(() => {
+          if (selectedEnglishItem) selectedEnglishItem.classList.remove('wrong', 'selected');
+          if (selectedGermanItem) selectedGermanItem.classList.remove('wrong', 'selected');
+          selectedEnglishItem = null;
+          selectedGermanItem = null;
+        }, 500);
+      }
+    }
+  }
+
+  // Dialogue Functions (all German)
+  function playPatientLine() {
+    const bodyPart = document.getElementById('sel-body-part').value;
+    speak(`Ich habe ${bodyPart}.`, null, 'de');
+  }
+  function playCoughResponse() {
+    const cough = document.getElementById('sel-cough').value;
+    speak(cough, null, 'de');
+  }
+  function playDoctorTreatment() {
+    const treatment = document.getElementById('sel-treatment').value;
+    speak(`Gut so. Sie müssen ${treatment}.`, null, 'de');
+  }
+  function playFullDialogue() {
+    const bodyPart = document.getElementById('sel-body-part').value;
+    const cough = document.getElementById('sel-cough').value;
+    const treatment = document.getElementById('sel-treatment').value;
+
+    const lines = [
+      'Guten Tag, Paul.',
+      'Guten Tag, Herr Doktor.',
+      'Was fehlt Ihnen?',
+      `Ich habe ${bodyPart}.`,
+      'Haben Sie Husten?',
+      cough,
+      'Machen Sie den Mund auf. Sagen Sie a-a-a.',
+      'A-a-a.',
+      `Gut so. Sie müssen ${treatment}.`,
+      'Kann ich spielen?',
+      'Nein, besser ausruhen. Auf Wiedersehen.',
+      'Auf Wiedersehen. Danke.'
+    ];
+    let i = 0;
+    function playNext() {
+      if (i < lines.length) {
+        speak(lines[i], null, 'de');
+        i++;
+        setTimeout(playNext, 2500);
+      }
+    }
+    playNext();
+  }
+  function showCertificate() {
+    const cert = document.getElementById('certificate');
+    document.getElementById('cert-date').textContent = new Date().toLocaleDateString('en-US');
+    cert.style.display = 'block';
+    cert.scrollIntoView({ behavior: 'smooth' });
+  }
+</script>
+</body>
+</html>
